@@ -13,8 +13,12 @@ namespace Moviedb.Models
         public DateTime ReleaseDate { get; set; }
         public string Plot { get; set; }
 
+
+
         public int ProducerId { get; set; }
         public virtual Producer Producer { get; set; }
+
+
 
         public virtual ICollection<Actor> Actors { get; set; }
     }

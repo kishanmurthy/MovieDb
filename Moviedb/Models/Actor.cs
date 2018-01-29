@@ -9,10 +9,16 @@ namespace Moviedb.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public char Gender { get; set; }
+        public Gender Gender { get; set; }
         public DateTime DOB { get; set; }
         public string Bio { get; set; }
 
         public virtual ICollection<Movie> Movies { get; set; }
+    }
+
+    public enum Gender
+    {
+        Male,
+        Female
     }
 }
