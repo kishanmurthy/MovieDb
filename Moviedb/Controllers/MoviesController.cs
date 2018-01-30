@@ -51,8 +51,17 @@ namespace Moviedb.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,Name,ReleaseDate,Plot,ProducerId")] Movie movie)
         {
+
             if (ModelState.IsValid)
             {
+
+                String [] str = Request["Actors"].Split(',');
+
+                for(int i=0;i<str.Length;i++)
+                    movie.Actors.Add(db.Actors.Find(int.Parse(str[i])));
+
+                
+
                 db.Movies.Add(movie);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -74,7 +83,9 @@ namespace Moviedb.Controllers
             {
                 return HttpNotFound();
             }
+
             ViewBag.ProducerId = new SelectList(db.Producers, "Id", "Name", movie.ProducerId);
+            ViewBag.Actors = db.Actors.ToList();
             return View(movie);
         }
 
@@ -87,11 +98,16 @@ namespace Moviedb.Controllers
         {
             if (ModelState.IsValid)
             {
+                String[] str = Request["Actors"].Split(',');
+
+                for (int i = 0; i < str.Length; i++)
+                    movie.Actors.Add(db.Actors.Find(int.Parse(str[i])));
                 db.Entry(movie).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
             ViewBag.ProducerId = new SelectList(db.Producers, "Id", "Name", movie.ProducerId);
+            
             return View(movie);
         }
 

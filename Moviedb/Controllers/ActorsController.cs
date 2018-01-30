@@ -38,11 +38,8 @@ namespace Moviedb.Controllers
         // GET: Actors/Create
         public ActionResult Create()
         {
-            var viewModel = new MoviesActorViewModel()
-            {
-                Actors = db.Actors.ToList()
-            }; 
-            return View(viewModel);
+            var actor = new Actor();         
+            return View(actor);
         }
 
         // POST: Actors/Create
