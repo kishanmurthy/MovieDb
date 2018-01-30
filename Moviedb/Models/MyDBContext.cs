@@ -24,6 +24,7 @@ namespace Moviedb.Models
         public virtual DbSet<Movie> Movies { get; set; }
         public virtual DbSet<Actor> Actors { get; set; }
         public virtual DbSet<Producer> Producers { get; set; }
+        
 
     }
 

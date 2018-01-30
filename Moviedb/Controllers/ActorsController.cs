@@ -7,125 +7,116 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using Moviedb.Models;
-
+using Moviedb.ViewModel;
 namespace Moviedb.Controllers
 {
-    public class MoviesController : Controller
+    public class ActorsController : Controller
     {
         private MyDBContext db = new MyDBContext();
 
-        // GET: Movies
+        // GET: Actors
         public ActionResult Index()
         {
-            var movies = db.Movies.Include(m => m.Producer);
-            return View(movies.ToList());
+            return View(db.Actors.ToList());
         }
 
-        // GET: Movies/Details/5
+        // GET: Actors/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Movie movie = db.Movies.Find(id);
-            if (movie == null)
+            Actor actor = db.Actors.Find(id);
+            if (actor == null)
             {
                 return HttpNotFound();
             }
-            return View(movie);
+            return View(actor);
         }
 
-        // GET: Movies/Create
+        // GET: Actors/Create
         public ActionResult Create()
         {
-            ViewBag.ProducerId = new SelectList(db.Producers, "Id", "Name");
-            ViewBag.Actors = db.Actors.ToList();
-            return View();
+            var viewModel = new MoviesActorViewModel()
+            {
+                Actors = db.Actors.ToList()
+            }; 
+            return View(viewModel);
         }
 
-        // POST: Movies/Create
+        // POST: Actors/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Name,ReleaseDate,Plot,ProducerId")] Movie movie)
+        public ActionResult Create([Bind(Include = "Id,Name,Gender,DOB,Bio")] Actor actor)
         {
             if (ModelState.IsValid)
             {
-                db.Movies.Add(movie);
+                db.Actors.Add(actor);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.ProducerId = new SelectList(db.Producers, "Id", "Name", movie.ProducerId);
-            return View(movie);
+            return View(actor);
         }
 
-        // GET: Movies/Edit/5
+        // GET: Actors/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Movie movie = db.Movies.Find(id);
-            if (movie == null)
+            Actor actor = db.Actors.Find(id);
+            if (actor == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.ProducerId = new SelectList(db.Producers, "Id", "Name", movie.ProducerId);
-            return View(movie);
+            return View(actor);
         }
 
-        // POST: Movies/Edit/5
+        // POST: Actors/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Name,ReleaseDate,Plot,ProducerId")] Movie movie)
+        public ActionResult Edit([Bind(Include = "Id,Name,Gender,DOB,Bio")] Actor actor)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(movie).State = EntityState.Modified;
+                db.Entry(actor).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.ProducerId = new SelectList(db.Producers, "Id", "Name", movie.ProducerId);
-            return View(movie);
+            return View(actor);
         }
 
-        // GET: Movies/Delete/5
+        // GET: Actors/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Movie movie = db.Movies.Find(id);
-            if (movie == null)
+            Actor actor = db.Actors.Find(id);
+            if (actor == null)
             {
                 return HttpNotFound();
             }
-            return View(movie);
+            return View(actor);
         }
 
-        // POST: Movies/Delete/5
+        // POST: Actors/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Movie movie = db.Movies.Find(id);
-            db.Movies.Remove(movie);
+            Actor actor = db.Actors.Find(id);
+            db.Actors.Remove(actor);
             db.SaveChanges();
             return RedirectToAction("Index");
-        }
-
-
-        public ActionResult GetActors()
-        {
-            var actors = db.Actors.ToList(); 
-            return PartialView();
         }
 
         protected override void Dispose(bool disposing)

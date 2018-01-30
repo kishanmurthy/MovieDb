@@ -150,6 +150,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\ActorsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MoviesController.cs" />
     <Compile Include="Controllers\ProducersController.cs" />
@@ -170,6 +171,7 @@
     <Compile Include="Models\MyDBContext.cs" />
     <Compile Include="Models\Producer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModel\MoviesActorViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
@@ -218,6 +220,12 @@
     <Content Include="Views\Movies\Details.cshtml" />
     <Content Include="Views\Movies\Edit.cshtml" />
     <Content Include="Views\Movies\Index.cshtml" />
+    <Content Include="Views\Actors\Create.cshtml" />
+    <Content Include="Views\Actors\Delete.cshtml" />
+    <Content Include="Views\Actors\Details.cshtml" />
+    <Content Include="Views\Actors\Edit.cshtml" />
+    <Content Include="Views\Actors\Index.cshtml" />
+    <Content Include="Views\Movies\GetActors.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
