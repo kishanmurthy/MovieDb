@@ -165,6 +165,10 @@
     <Compile Include="Migrations\201801291110419_ChangedTheGenderToEnum.Designer.cs">
       <DependentUpon>201801291110419_ChangedTheGenderToEnum.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201801300913153_UpdatedModels.cs" />
+    <Compile Include="Migrations\201801300913153_UpdatedModels.Designer.cs">
+      <DependentUpon>201801300913153_UpdatedModels.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Actor.cs" />
     <Compile Include="Models\Movie.cs" />
@@ -259,6 +263,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201801291110419_ChangedTheGenderToEnum.resx">
       <DependentUpon>201801291110419_ChangedTheGenderToEnum.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801300913153_UpdatedModels.resx">
+      <DependentUpon>201801300913153_UpdatedModels.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

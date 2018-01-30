@@ -10,9 +10,9 @@
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
-                @Html.ActionLink("Movie DB", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
-            </div>
-      </div>
+            <h2>@Html.ActionLink("Movie DB", "Index")</h2> 
+        </div>
+    </div>
     <div class="container body-content">
         @RenderBody()
         <hr />
@@ -23,6 +23,13 @@
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
+    <script type="text/javascript">
+        $(function () {
+            $.validator.methods.date = function (value, element) {
+                return this.optional(element) || Globalize.parseDate(value, "dd.MM.yyyy") !== null;
+            }
+        });
+    </script>
     @RenderSection("scripts", required: false)
 </body>
 </html>

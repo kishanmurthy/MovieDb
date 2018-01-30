@@ -55,16 +55,27 @@ namespace Moviedb.Controllers
             if (ModelState.IsValid)
             {
 
-                String [] str = Request["Actors"].Split(',');
+                try
+                {
+                    String[] str = Request["Actors"].Split(',');
 
-                for(int i=0;i<str.Length;i++)
-                    movie.Actors.Add(db.Actors.Find(int.Parse(str[i])));
+                    for (int i = 0; i < str.Length; i++)
+                        movie.Actors.Add(db.Actors.Find(int.Parse(str[i])));
 
-                
 
-                db.Movies.Add(movie);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+
+
+                   
+                    db.Movies.Add(movie);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+
+                }
+                catch (Exception E)
+                {
+                    
+                    return Create();
+                }
             }
 
             ViewBag.ProducerId = new SelectList(db.Producers, "Id", "Name", movie.ProducerId);
@@ -98,10 +109,26 @@ namespace Moviedb.Controllers
         {
             if (ModelState.IsValid)
             {
-                String[] str = Request["Actors"].Split(',');
-
+                String[] str;
+                try
+                {
+                     str = Request["Actors"].Split(',');
+                }
+                catch(Exception e)
+                {
+                    return Edit(movie.Id);
+                }
                 for (int i = 0; i < str.Length; i++)
-                    movie.Actors.Add(db.Actors.Find(int.Parse(str[i])));
+                {
+                    try
+                    {
+                        movie.Actors.Add(db.Actors.Find(int.Parse(str[i])));
+                    }
+                    catch (Exception E)
+                    {
+                        Console.WriteLine("Exception {0}", E);
+                    }
+                }
                 db.Entry(movie).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
