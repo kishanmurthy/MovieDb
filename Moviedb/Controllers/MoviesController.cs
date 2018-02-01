@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -61,20 +62,26 @@ namespace Moviedb.Controllers
                 {
                     String[] str = Request["Actors"].Split(',');
 
+                    HttpPostedFileBase file = Request.Files[0];
+
+                    var path = Server.MapPath("~/Images/MoviePosters/");
+                    var fileName = Path.GetFileName(file.FileName);
+
+                    file.SaveAs( path + fileName);
+
+                    
                     for (int i = 0; i < str.Length; i++)
                         movie.Actors.Add(db.Actors.Find(int.Parse(str[i])));
-
-
-
-
                    
+                    
                     db.Movies.Add(movie);
                     db.SaveChanges();
                     return RedirectToAction("Index");
 
                 }
-                catch (Exception E)
+                catch (Exception e)
                 {
+
                     ViewBag.ProducerId = new SelectList(db.Producers, "Id", "Name");
                     ViewBag.Actors = db.Actors.ToList();
 
@@ -121,7 +128,7 @@ namespace Moviedb.Controllers
                      str = Request["Actors"].Split(',');
                     
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     return Edit(movie.Id);
 

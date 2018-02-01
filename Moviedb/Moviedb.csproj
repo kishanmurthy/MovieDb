@@ -169,6 +169,10 @@
     <Compile Include="Migrations\201801300913153_UpdatedModels.Designer.cs">
       <DependentUpon>201801300913153_UpdatedModels.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201802011015585_AddedMoviePosterPath.cs" />
+    <Compile Include="Migrations\201802011015585_AddedMoviePosterPath.Designer.cs">
+      <DependentUpon>201802011015585_AddedMoviePosterPath.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Actor.cs" />
     <Compile Include="Models\Movie.cs" />
@@ -245,6 +249,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Images\MoviePosters\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -268,6 +273,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201801300913153_UpdatedModels.resx">
       <DependentUpon>201801300913153_UpdatedModels.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201802011015585_AddedMoviePosterPath.resx">
+      <DependentUpon>201802011015585_AddedMoviePosterPath.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

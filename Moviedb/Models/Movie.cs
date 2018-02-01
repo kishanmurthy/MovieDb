@@ -15,6 +15,7 @@ namespace Moviedb.Models
         }
 
         public int Id { get; set; }
+
         [Required]
         public string Name { get; set; }
 
@@ -24,6 +25,10 @@ namespace Moviedb.Models
         public DateTime ReleaseDate { get; set; }
 
         public string Plot { get; set; }
+
+
+        public string MoviePosterPath { get; set; }
+
 
         [Display(Name = "Producer")]
         public int ProducerId { get; set; }
