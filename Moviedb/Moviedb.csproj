@@ -240,6 +240,8 @@
     <Content Include="Views\Actors\Edit.cshtml" />
     <Content Include="Views\Actors\Index.cshtml" />
     <Content Include="Views\Movies\GetActors.cshtml" />
+    <Content Include="Views\Shared\CreateActor.cshtml" />
+    <Content Include="Views\Shared\CreateProducer.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

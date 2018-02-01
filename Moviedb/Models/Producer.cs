@@ -13,7 +13,6 @@ namespace Moviedb.Models
         [Required]
         public string Name { get; set; }
         public Gender Gender { get; set; }
-
         [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}")]
         [Display(Name = "Date of Birth")]
         public DateTime ? DOB { get; set; }

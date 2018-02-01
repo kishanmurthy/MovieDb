@@ -39,6 +39,8 @@ namespace Moviedb.Controllers
         // GET: Movies/Create
         public ActionResult Create()
         {
+
+            var producerController = new Moviedb.Controllers.ActorsController();
             ViewBag.ProducerId = new SelectList(db.Producers, "Id", "Name");
             ViewBag.Actors = db.Actors.ToList();
             return View();

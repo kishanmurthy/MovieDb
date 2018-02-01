@@ -41,6 +41,30 @@ namespace Moviedb.Controllers
             return View();
         }
 
+
+        public ActionResult CreateProducer()
+        {
+
+            return View();
+        }
+
+
+
+        [HttpPost]
+        public ActionResult CreateProducer([Bind(Include = "Id,Name,Gender,DOB,Bio")]Producer producer)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Producers.Add(producer);
+                db.SaveChanges();
+
+                
+                return Json(producer);
+            }
+
+            return View(producer);  
+        }
+
         // POST: Producers/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.

@@ -3,16 +3,63 @@
 @{
     ViewBag.Title = "Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
-
-
-
-
-
 }
+
 <script src="~/Scripts/jquery-1.10.2.js"></script>
 <script src="~/Scripts/chosen.jquery.js"></script>
 <link href="~/Content/chosen.css" rel="stylesheet" />
 
+<script>
+    function SubmitProducer() {
+        $('#MyModalProducer').modal('toggle');
+       
+        $.ajax({
+            type: "POST",
+            url: "/Producers/CreateProducer",
+            data: $("#ProducerForm").serialize(),
+            success: function (response) {
+                var x = document.getElementById("ProducersDropDown");
+                
+
+                document.myResponse = response;
+
+                    var option = document.createElement("option");
+                    option.text = response.Name;
+                    option.id = response.Id;
+                    x.add(option);
+                }
+            });
+    }
+</script>
+<script>
+    function SubmitActor() {
+        $('#MyModalActor').modal('toggle');
+        
+        $.ajax({
+            type: "POST",
+            url: "/Actors/CreateActor",
+            data: $("#ActorForm").serialize(),
+            success: function (response) {
+                console.log("Success submit actor");
+                
+                var x = document.getElementsByClassName("actor_dropdown")[0];
+                    var option = document.createElement("option");
+                    option.text = response.Name;
+                    option.id = response.Id;
+                    x.add(option);
+                
+
+
+                $('.actor_dropdown').trigger("chosen:updated");
+            }
+
+
+        });
+
+        
+        
+    }
+</script>
 <h2>Create</h2>
 
 
@@ -51,8 +98,10 @@
         <div class="form-group">
             @Html.LabelFor(model => model.ProducerId, "Producer", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownList("ProducerId", null, htmlAttributes: new { @class = "form-control" })
-                <a href="/producers/create">New Producer</a>
+            
+                @Html.DropDownList("ProducerId", null, htmlAttributes: new { @class = "form-control" , @id = "ProducersDropDown" })
+                
+                <button class="btn btn-primary" data-target="#MyModalProducer" data-toggle="modal" >New Producer</button>
                 @Html.ValidationMessageFor(model => model.ProducerId, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -60,8 +109,8 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Actors, "Actors", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.ListBox("Actors", new SelectList(ViewBag.Actors, "Id", "Name"), htmlAttributes: new { @id = "actor_dropdown" })
-                <a href="/actors/create">New Actor</a>
+                @Html.ListBox("Actors", new SelectList(ViewBag.Actors, "Id", "Name"), htmlAttributes: new { @class = "actor_dropdown" })
+                <button class="btn btn-primary" data-target="#MyModalActor" data-toggle="modal">New Actor</button>
             </div>
         </div>
 
@@ -78,12 +127,38 @@
     @Html.ActionLink("Back to List", "Index")
 </div>
 
+<div class="modal glyphicon-fast-forward" id="MyModalProducer" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" data-dismiss="modal" onclick="close()">&times;</button>
+             <div class="modal-body" id="ModalBodyProducer">
+                          @Html.Partial("CreateProducer");
+             </div>       
+            </div>
 
-    @Scripts.Render("~/bundles/jqueryval")
+        </div>
+    </div>
+</div>
+
+<div class="modal glyphicon-fast-forward" id="MyModalActor" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" data-dismiss="modal" onclick="close()">&times;</button>
+                <div class="modal-body" id="ModalBodyActor">
+                        @Html.Partial("CreateActor");
+                </div>
+            </div>
+
+        </div>
+    </div>s
+</div>
+
+
+@Scripts.Render("~/bundles/jqueryval")
 
 <script type="text/javascript">
         
-    $('#actor_dropdown').chosen();
+    $('.actor_dropdown').chosen();
 </script>
-
-

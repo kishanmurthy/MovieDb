@@ -41,6 +41,29 @@ namespace Moviedb.Controllers
             var actor = new Actor();         
             return View(actor);
         }
+        public ActionResult CreateActor()
+        {
+            var actor = new Actor();
+            return View(actor);
+        }
+       
+        [HttpPost]
+        public ActionResult CreateActor([Bind(Include = "Id,Name,Gender,DOB,Bio")] Actor actor)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Actors.Add(actor);
+                db.SaveChanges();
+
+                
+                return Json(actor);
+            }
+
+            return View(actor);
+
+        }
+
+
 
         // POST: Actors/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
