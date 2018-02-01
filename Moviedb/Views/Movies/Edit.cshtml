@@ -5,109 +5,171 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Edit</h2>
+<script src="~/Scripts/chosen.jquery.js"></script>
+<link href="~/Content/chosen.css" rel="stylesheet" />
 
+<script>
+    function SubmitProducer() {
+        $('#MyModalProducer').modal('toggle');
+
+        $.ajax({
+            type: "POST",
+            url: "/Producers/CreateProducer",
+            data: $("#ProducerForm").serialize(),
+            success: function (response) {
+                var x = document.getElementById("ProducersDropDown");
+
+                document.myResponse = response;
+
+                var option = document.createElement("option");
+                option.text = response.Name;
+                option.value = response.Id;
+                x.add(option);
+            }
+        });
+    }
+</script>
+<script>
+    function SubmitActor() {
+        $('#MyModalActor').modal('toggle');
+
+        $.ajax({
+            type: "POST",
+            url: "/Actors/CreateActor",
+            data: $("#ActorForm").serialize(),
+            success: function (response) {
+                console.log("Success submit actor");
+                document.response = response;
+                var x = document.getElementsByClassName("actor_dropdown")[0];
+                var option = document.createElement("option");
+                option.text = response.Name;
+                option.value = response.Id;
+                x.add(option);
+
+                $('.actor_dropdown').trigger("chosen:updated");
+            }
+
+        });
+
+    }
+</script>
+
+<h2>Edit</h2>
 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
 
-<div class="form-horizontal">
-    <h4>Movie</h4>
-    <hr />
-    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-    @Html.HiddenFor(model => model.Id)
+    <div class="form-horizontal">
+        <h4>Movie</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.Id)
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+            </div>
         </div>
-    </div>
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.ReleaseDate, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.TextBoxFor(model => model.ReleaseDate, "{0: dd-MM-yyyy}",new { @class = "form-control" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.ReleaseDate, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.ReleaseDate, "{0: dd-MM-yyyy}", new { @class = "form-control" })
 
-            @*@Html.EditorFor(model => model.ReleaseDate, "{0: dd-MM-yyyy}", new { htmlAttributes = new { @class = "form-control" } })*@
-            @Html.ValidationMessageFor(model => model.ReleaseDate, "", new { @class = "text-danger" })
+                @*@Html.EditorFor(model => model.ReleaseDate, "{0: dd-MM-yyyy}", new { htmlAttributes = new { @class = "form-control" } })*@
+                @Html.ValidationMessageFor(model => model.ReleaseDate, "", new { @class = "text-danger" })
+            </div>
         </div>
-    </div>
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.Plot, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.Plot, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Plot, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.Plot, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Plot, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Plot, "", new { @class = "text-danger" })
+            </div>
         </div>
-    </div>
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.ProducerId, "ProducerId", htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.DropDownList("ProducerId", null, htmlAttributes: new { @class = "form-control" })
-            @Html.ValidationMessageFor(model => model.ProducerId, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.ProducerId, "ProducerId", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("ProducerId", null, htmlAttributes: new { @class = "form-control", @id = "ProducersDropDown" })
+                <button type="button" class="btn btn-primary" data-target="#MyModalProducer" data-toggle="modal">New Producer</button>
+                @Html.ValidationMessageFor(model => model.ProducerId, "", new { @class = "text-danger" })
+            </div>
         </div>
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(model => model.Actors, "Actors", htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @*@Html.ListBox("Actors", new SelectList(ViewBag.Actors, "Id", "Name"), htmlAttributes: new { @id = "actor_dropdown" })*@
-            
-            
-            <select id="actor_dropdown" multiple="multiple" name="Actors">
-            
-            @{ 
-                foreach (var actor in ViewBag.Actors)
-                {
+        <div class="form-group">
+            @Html.LabelFor(model => model.Actors, "Actors", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
 
-                    if (Model.Actors.Contains(actor))
-                    {
-                        <option value=actor.Id selected>@actor.Name</option>
+                <select class="actor_dropdown" multiple="multiple" name="Actors">
 
-                    }
-                    else
-                    {
-                        <option value=actor.Id>@actor.Name</option>
+                    @{
+                        foreach (var actor in ViewBag.Actors)
+                        {
+
+                            if (Model.Actors.Contains(actor))
+                            {
+                                <option value=@actor.Id selected>@actor.Name</option>
+
+                            }
+                            else
+                            {
+                                <option value=@actor.Id>@actor.Name</option>
+                            }
                         }
                     }
-                }
-            </select>
-
-
+                </select>
+                <button type="button" class="btn btn-primary" data-target="#MyModalActor" data-toggle="modal">New Actor</button>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
         </div>
     </div>
-    <div class="form-group">
-        <label class="control-label col-md-2" for="Actors">Actors</label>
-        <div class="col-md-10">
-            
-        </div>
-    </div>
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <input type="submit" value="Save" class="btn btn-default" />
-        </div>
-    </div>
-</div>
 }
 
 <div>
     @Html.ActionLink("Back to List", "Index")
 </div>
 
+<div class="modal glyphicon-fast-forward" id="MyModalProducer" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" data-dismiss="modal" onclick="close()">&times;</button>
+                <div class="modal-body" id="ModalBodyProducer">
+
+
+                    @Html.Partial("CreateProducer", (Object)ViewBag.NewProducer);
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal glyphicon-fast-forward" id="MyModalActor" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" data-dismiss="modal" onclick="close()">&times;</button>
+                <div class="modal-body" id="ModalBodyActor">
+                    @Html.Partial("CreateActor", (Object)ViewBag.NewActor);
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
-    <script src="~/Scripts/jquery-1.10.2.js"></script>
-    <script src="~/Scripts/chosen.jquery.js"></script>
-    <link href="~/Content/chosen.css" rel="stylesheet" />
-
-
-
-
     <script type="text/javascript">
 
-        $('#actor_dropdown').chosen();
+        $('.actor_dropdown').chosen();
     </script>
 }

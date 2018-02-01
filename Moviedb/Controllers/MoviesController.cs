@@ -40,7 +40,7 @@ namespace Moviedb.Controllers
         public ActionResult Create()
         {
 
-            var producerController = new Moviedb.Controllers.ActorsController();
+            
             ViewBag.ProducerId = new SelectList(db.Producers, "Id", "Name");
             ViewBag.Actors = db.Actors.ToList();
             return View();
@@ -75,7 +75,9 @@ namespace Moviedb.Controllers
                 }
                 catch (Exception E)
                 {
-                    
+                    ViewBag.ProducerId = new SelectList(db.Producers, "Id", "Name");
+                    ViewBag.Actors = db.Actors.ToList();
+
                     return Create();
                 }
             }
@@ -98,6 +100,8 @@ namespace Moviedb.Controllers
             }
 
             ViewBag.ProducerId = new SelectList(db.Producers, "Id", "Name", movie.ProducerId);
+            ViewBag.NewProducer = new Producer();
+            ViewBag.NewActor = new Actor();
             ViewBag.Actors = db.Actors.ToList();
             return View(movie);
         }
@@ -115,23 +119,35 @@ namespace Moviedb.Controllers
                 try
                 {
                      str = Request["Actors"].Split(',');
+                    
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     return Edit(movie.Id);
+
                 }
+
+                var movieDb = db.Movies.Single(m => m.Id == movie.Id);
                 for (int i = 0; i < str.Length; i++)
                 {
                     try
                     {
-                        movie.Actors.Add(db.Actors.Find(int.Parse(str[i])));
+                        movieDb.Actors.Add(db.Actors.Find(int.Parse(str[i])));
+
+
                     }
                     catch (Exception E)
                     {
                         Console.WriteLine("Exception {0}", E);
                     }
                 }
-                db.Entry(movie).State = EntityState.Modified;
+
+                movieDb.Name = movie.Name;
+                movieDb.Plot = movie.Plot;
+                movieDb.ReleaseDate = movie.ReleaseDate;
+                movieDb.ProducerId = movie.ProducerId;
+                //movieDb.Actors = movie.Actors;
+
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
