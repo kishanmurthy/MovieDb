@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using Moviedb.Models;
+using System;
 using System.Data.Entity;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
-using Moviedb.Models;
 
 namespace Moviedb.Controllers
 {
@@ -18,7 +15,7 @@ namespace Moviedb.Controllers
         // GET: Movies
         public ActionResult Index()
         {
-            var movies = db.Movies.Include(m => m.Producer);
+            var movies = db.Movies.Include(m => m.Producer).Include(m => m.Actors);
             return View(movies.ToList());
         }
 
@@ -40,48 +37,48 @@ namespace Moviedb.Controllers
         // GET: Movies/Create
         public ActionResult Create()
         {
-
-            
             ViewBag.ProducerId = new SelectList(db.Producers, "Id", "Name");
             ViewBag.Actors = db.Actors.ToList();
             return View();
         }
 
         // POST: Movies/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,Name,ReleaseDate,Plot,ProducerId")] Movie movie)
         {
-
             if (ModelState.IsValid)
             {
-
                 try
                 {
                     String[] str = Request["Actors"].Split(',');
 
-                    HttpPostedFileBase file = Request.Files[0];
+                    if (Request.Files.Count > 0)
+                    {
+                        HttpPostedFileBase file = Request.Files[0];
 
-                    var path = Server.MapPath("~/Images/MoviePosters/");
-                    var fileName = Path.GetFileName(file.FileName);
-
-                    file.SaveAs( path + fileName);
-
-                    
+                        var fileName = file.FileName;
+                        if (fileName != "")
+                        {
+                            var path = "D:\\Images\\MoviePosters\\";
+                            var MyfileName = DateTime.UtcNow.ToString("yyyyMMddHHmmssfff") + "_" + fileName;
+                            var MyFilePath = path + MyfileName;
+                            var filePathWebPage = "http://moviedb.kishan.com/moviePosters/" + MyfileName;
+                            file.SaveAs(MyFilePath);
+                            movie.MoviePosterPath = filePathWebPage;
+                        }
+                    }
                     for (int i = 0; i < str.Length; i++)
                         movie.Actors.Add(db.Actors.Find(int.Parse(str[i])));
-                   
-                    
+
                     db.Movies.Add(movie);
                     db.SaveChanges();
                     return RedirectToAction("Index");
-
                 }
                 catch (Exception e)
                 {
-
                     ViewBag.ProducerId = new SelectList(db.Producers, "Id", "Name");
                     ViewBag.Actors = db.Actors.ToList();
 
@@ -114,7 +111,7 @@ namespace Moviedb.Controllers
         }
 
         // POST: Movies/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -125,13 +122,11 @@ namespace Moviedb.Controllers
                 String[] str;
                 try
                 {
-                     str = Request["Actors"].Split(',');
-                    
+                    str = Request["Actors"].Split(',');
                 }
                 catch (Exception)
                 {
                     return Edit(movie.Id);
-
                 }
 
                 var movieDb = db.Movies.Single(m => m.Id == movie.Id);
@@ -140,8 +135,6 @@ namespace Moviedb.Controllers
                     try
                     {
                         movieDb.Actors.Add(db.Actors.Find(int.Parse(str[i])));
-
-
                     }
                     catch (Exception E)
                     {
@@ -159,7 +152,7 @@ namespace Moviedb.Controllers
                 return RedirectToAction("Index");
             }
             ViewBag.ProducerId = new SelectList(db.Producers, "Id", "Name", movie.ProducerId);
-            
+
             return View(movie);
         }
 
@@ -178,6 +171,15 @@ namespace Moviedb.Controllers
             return View(movie);
         }
 
+        [HttpPost]
+        public ActionResult DeleteAjax(int id)
+        {
+            Movie movie = db.Movies.Find(id);
+            db.Movies.Remove(movie);
+            db.SaveChanges();
+            return Json(movie);
+        }
+
         // POST: Movies/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -189,10 +191,9 @@ namespace Moviedb.Controllers
             return RedirectToAction("Index");
         }
 
-
         public ActionResult GetActors()
         {
-            var actors = db.Actors.ToList(); 
+            var actors = db.Actors.ToList();
             return PartialView();
         }
 
