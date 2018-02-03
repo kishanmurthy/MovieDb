@@ -5,7 +5,6 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
-
 namespace Moviedb.Controllers
 {
     public class MoviesController : Controller
@@ -177,6 +176,15 @@ namespace Moviedb.Controllers
             Movie movie = db.Movies.Find(id);
             db.Movies.Remove(movie);
             db.SaveChanges();
+            
+            if (movie.MoviePosterPath != null)
+            {
+
+                var filePath = "D:\\Images\\MoviePosters\\" + movie.MoviePosterPath.Split('/').Last();
+                if(System.IO.File.Exists(filePath))
+                    System.IO.File.Delete(filePath);
+            }
+
             return Json(movie);
         }
 
