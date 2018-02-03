@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using Moviedb.Models;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
-using Moviedb.Models;
-using Moviedb.ViewModel;
+
 namespace Moviedb.Controllers
 {
     public class ActorsController : Controller
@@ -38,35 +34,32 @@ namespace Moviedb.Controllers
         // GET: Actors/Create
         public ActionResult Create()
         {
-            var actor = new Actor();         
+            var actor = new Actor();
             return View(actor);
         }
+
         public ActionResult CreateActor()
         {
             var actor = new Actor();
             return View(actor);
         }
-       
+
         [HttpPost]
         public ActionResult CreateActor([Bind(Include = "Id,Name,Gender,DOB,Bio")] Actor actor)
         {
             if (ModelState.IsValid)
             {
                 db.Actors.Add(actor);
-                db.SaveChanges();
+                db.SaveChanges();   
 
-                
                 return Json(actor);
             }
 
-            return View(actor);
-
+            return Json(null);
         }
 
-
-
         // POST: Actors/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -98,7 +91,7 @@ namespace Moviedb.Controllers
         }
 
         // POST: Actors/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]

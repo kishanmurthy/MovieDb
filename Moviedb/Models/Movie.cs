@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
 
 namespace Moviedb.Models
 {
@@ -10,8 +8,7 @@ namespace Moviedb.Models
     {
         public Movie()
         {
-           this.Actors = new HashSet<Actor>();
-            
+            this.Actors = new HashSet<Actor>();
         }
 
         public int Id { get; set; }
@@ -26,13 +23,11 @@ namespace Moviedb.Models
 
         public string Plot { get; set; }
 
-
         public string MoviePosterPath { get; set; }
-
 
         [Display(Name = "Producer")]
         public int ProducerId { get; set; }
-       
+
         public virtual Producer Producer { get; set; }
 
         public virtual ICollection<Actor> Actors { get; set; }

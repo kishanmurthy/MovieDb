@@ -10,57 +10,56 @@
 
 <script>
     function SubmitProducer() {
-        $('#MyModalProducer').modal('toggle');
-       
+
         $.ajax({
             type: "POST",
             url: "/Producers/CreateProducer",
             data: $("#ProducerForm").serialize(),
             success: function (response) {
-                var x = document.getElementById("ProducersDropDown");
-                
 
-                
-
+                if (response != undefined) {
+                    var x = document.getElementById("ProducersDropDown");
                     var option = document.createElement("option");
                     option.text = response.Name;
                     option.value = response.Id;
                     x.add(option);
+
+                    $('#MyModalProducer').modal('toggle');
+
                 }
-            });
+            }
+
+        });
     }
 </script>
 <script>
     function SubmitActor() {
-        $('#MyModalActor').modal('toggle');
-        
+
         $.ajax({
             type: "POST",
             url: "/Actors/CreateActor",
             data: $("#ActorForm").serialize(),
             success: function (response) {
-                console.log("Success submit actor");
-                
-                var x = document.getElementsByClassName("actor_dropdown")[0];
+                console.log("Success submit actor");                
+                if (response != undefined) {
+
+                    var x = document.getElementsByClassName("actor_dropdown")[0];
                     var option = document.createElement("option");
                     option.text = response.Name;
                     option.value = response.Id;
                     x.add(option);
-                
 
+                    $('#MyModalActor').modal('toggle');
+                    $('.actor_dropdown').trigger("chosen:updated");
 
-                $('.actor_dropdown').trigger("chosen:updated");
+                }
             }
-
 
         });
 
-        
-        
     }
 </script>
 <h2>Create</h2>
-
 
 <form action="/movies/create" method="post" enctype="multipart/form-data">
     @Html.AntiForgeryToken()
@@ -75,12 +74,12 @@
                 @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
             </div>
-    </div>
+        </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.ReleaseDate, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.ReleaseDate,"{0: dd-MM-yyyy}", new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.ReleaseDate, "{0: dd-MM-yyyy}", new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.ReleaseDate, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -92,14 +91,13 @@
                 @Html.ValidationMessageFor(model => model.Plot, "", new { @class = "text-danger" })
             </div>
         </div>
-
         <div class="form-group">
             @Html.LabelFor(model => model.ProducerId, "Producer", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-            
-                @Html.DropDownList("ProducerId", null, htmlAttributes: new { @class = "form-control" , @id = "ProducersDropDown" })
-                
-                <button type="button"  class="btn btn-primary" data-target="#MyModalProducer" data-toggle="modal" >New Producer</button>
+
+                @Html.DropDownList("ProducerId", null, htmlAttributes: new { @class = "form-control", @id = "ProducersDropDown" })
+
+                <button type="button" class="btn btn-default" data-target="#MyModalProducer" data-toggle="modal">New Producer</button>
                 @Html.ValidationMessageFor(model => model.ProducerId, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -108,23 +106,20 @@
             @Html.LabelFor(model => model.Actors, "Actors", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.ListBox("Actors", new SelectList(ViewBag.Actors, "Id", "Name"), htmlAttributes: new { @class = "actor_dropdown" })
-                <button class="btn btn-primary" data-target="#MyModalActor" data-toggle="modal">New Actor</button>
+                <button class="btn btn-default" data-target="#MyModalActor" data-toggle="modal">New Actor</button>
             </div>
         </div>
-        
+
         <div class="form-group">
             @Html.LabelFor(model => model.MoviePosterPath, "Movie Poster", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 <input type="file" name="MoviePoster" id="MoviePoster" accept="image/*" />
             </div>
         </div>
-
-
-
-        
+        <br />
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </div>
     </div>
@@ -133,39 +128,33 @@
 <div>
     @Html.ActionLink("Back to List", "Index")
 </div>
-
 <div class="modal glyphicon-fast-forward" id="MyModalProducer" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button class="close" data-dismiss="modal" onclick="close()">&times;</button>
-             <div class="modal-body" id="ModalBodyProducer">
-                          @Html.Partial("CreateProducer");
-             </div>       
+                <div class="modal-body" id="ModalBodyProducer">
+                    @Html.Partial("CreateProducer")
+                </div>
             </div>
-
         </div>
     </div>
 </div>
-
 <div class="modal glyphicon-fast-forward" id="MyModalActor" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button class="close" data-dismiss="modal" onclick="close()">&times;</button>
                 <div class="modal-body" id="ModalBodyActor">
-                        @Html.Partial("CreateActor");
+                    @Html.Partial("CreateActor")
                 </div>
             </div>
-
         </div>
     </div>
 </div>
-
-
 @Scripts.Render("~/bundles/jqueryval")
 
 <script type="text/javascript">
-        
+
     $('.actor_dropdown').chosen();
 </script>

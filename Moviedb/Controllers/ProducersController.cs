@@ -62,7 +62,7 @@ namespace Moviedb.Controllers
                 return Json(producer);
             }
 
-            return View(producer);  
+            return Json(null);
         }
 
         // POST: Producers/Create

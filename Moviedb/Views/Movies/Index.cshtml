@@ -34,76 +34,67 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr id="@item.Id">
+    @foreach (var item in Model)
+    {
+        <tr id="@item.Id">
 
-        <td>
-            @{
+            <td>
+                @{
 
-            if (item.MoviePosterPath != "")
-            {
-                <a href="@item.MoviePosterPath"><img src="@item.MoviePosterPath" height="150" /></a>
-        }
+                    if (item.MoviePosterPath != "")
+                    {
+                        <a href="@item.MoviePosterPath"><img src="@item.MoviePosterPath" height="150" /></a>
+                    }
 
-            }
-
-
-        </td>
-
-        <td>
-            @Html.DisplayFor(modelItem => item.Name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ReleaseDate)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Plot)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Producer.Name)
-        </td>
-        <td>
-            @{ 
-                foreach(var actor in item.Actors)
-                {
-                    @actor.Name
-                    <br />
                 }
-            }
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-            <a onclick="deleteMovie(@item.Id)" href="#">Delete</a>
-        </td>
-    </tr>
-}
+            </td>
 
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReleaseDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Plot)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Producer.Name)
+            </td>
+            <td>
+                @{
+                    foreach (var actor in item.Actors)
+                    {
+                        @actor.Name
+                        <br />
+                    }
+                }
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                <a onclick="deleteMovie(@item.Id)" href="#">Delete</a>
+            </td>
+        </tr>
+    }
 </table>
 
-
 <script>
-    function deleteMovie(id){
+    function deleteMovie(id) {
 
         $.ajax({
             type: "POST",
             url: "/Movies/DeleteAjax",
-            data: {id},
+            data: { id },
             success: function (response) {
                 document.MyResponseDelete = response;
                 console.log("Success");
                 var row = document.getElementById(id);
                 row.parentNode.removeChild(row);
 
-
                 //var row = document.getElementById(id);
                 //movieTable.remove(row);
             }
         });
 
-
-
-
     }
-
 </script>
-

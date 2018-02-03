@@ -5,7 +5,6 @@
 
 <h2>Create</h2>
 
-
 <form id="ActorForm">
 
     @Html.AntiForgeryToken()
@@ -48,15 +47,13 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="button" value="Create" class="btn btn-default" onclick="SubmitActor()"/>
+                <input type="button" value="Create" class="btn btn-default" onclick="SubmitActor()" />
             </div>
         </div>
     </div>
 </form>
 
-
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
-        
-}
 
+}
