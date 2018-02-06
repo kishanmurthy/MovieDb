@@ -1,20 +1,24 @@
-﻿using System;
-using Moviedb.Models;
-using System.Data.Entity;
-using System.Linq;
+﻿using Moviedb.Models;
 using System.Net;
 using System.Web.Mvc;
+using Moviedb.Repository;
 
 namespace Moviedb.Controllers
 {
     public class ActorsController : Controller
     {
-        private MyDbContext db = new MyDbContext();
 
+        private readonly MovieRepository movieRepository;
+
+        public ActorsController()
+        {
+            movieRepository = new MovieRepository();
+        }
+        
         // GET: Actors
         public ActionResult Index()
         {
-            return View(db.Actors.ToList());
+            return View(movieRepository.GetAllActors());
         }
 
         // GET: Actors/Details/5
@@ -24,7 +28,7 @@ namespace Moviedb.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Actor actor = db.Actors.Find(id);
+            Actor actor = movieRepository.FindActor(id);
             if (actor == null)
             {
                 return HttpNotFound();
@@ -50,8 +54,8 @@ namespace Moviedb.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Actors.Add(actor);
-                db.SaveChanges();   
+                movieRepository.AddActorToDb(actor);
+                movieRepository.SaveChanges();   
 
                 return Json(actor);
             }
@@ -68,8 +72,8 @@ namespace Moviedb.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Actors.Add(actor);
-                db.SaveChanges();
+                movieRepository.AddActorToDb(actor);
+                movieRepository.SaveChanges();
                 return RedirectToAction("Index");
             }
 
@@ -83,7 +87,8 @@ namespace Moviedb.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Actor actor = db.Actors.Find(id);
+
+            Actor actor = movieRepository.FindActor(id);
             if (actor == null)
             {
                 return HttpNotFound();
@@ -100,8 +105,8 @@ namespace Moviedb.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(actor).State = EntityState.Modified;
-                db.SaveChanges();
+                movieRepository.UpdateActor(actor);
+                movieRepository.SaveChanges();
                 return RedirectToAction("Index");
             }
             return View(actor);
@@ -114,7 +119,7 @@ namespace Moviedb.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Actor actor = db.Actors.Find(id);
+            Actor actor = movieRepository.FindActor(id);
             if (actor == null)
             {
                 return HttpNotFound();
@@ -127,9 +132,9 @@ namespace Moviedb.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Actor actor = db.Actors.Find(id);
-            db.Actors.Remove(actor ?? throw new InvalidOperationException());
-            db.SaveChanges();
+            Actor actor = movieRepository.FindActor(id);
+            movieRepository.RemoveActor(actor);
+            movieRepository.SaveChanges();
             return RedirectToAction("Index");
         }
 
@@ -137,7 +142,7 @@ namespace Moviedb.Controllers
         {
             if (disposing)
             {
-                db.Dispose();
+                movieRepository.Dispose();
             }
             base.Dispose(disposing);
         }

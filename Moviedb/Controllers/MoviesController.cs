@@ -1,21 +1,28 @@
 ﻿using Moviedb.Models;
+using Moviedb.Repository;
 using System;
-using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+
 namespace Moviedb.Controllers
 {
     public class MoviesController : Controller
     {
-        private readonly MyDbContext _db = new MyDbContext();
+        // ReSharper disable once InconsistentNaming
+        private readonly MovieRepository movieRepository;
+
+        public MoviesController()
+        {
+            movieRepository = new MovieRepository();
+        }
 
         // GET: Movies
         public ActionResult Index()
         {
-            var movies = _db.Movies.Include(m => m.Producer).Include(m => m.Actors);
-            return View(movies.ToList());
+            var t = movieRepository.GetAllMovies().ToList();
+            return View(t);
         }
 
         // GET: Movies/Details/5
@@ -25,7 +32,8 @@ namespace Moviedb.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Movie movie = _db.Movies.Find(id);
+
+            Movie movie = movieRepository.FindMovie(id);
             if (movie == null)
             {
                 return HttpNotFound();
@@ -36,14 +44,12 @@ namespace Moviedb.Controllers
         // GET: Movies/Create
         public ActionResult Create()
         {
-            ViewBag.ProducerId = new SelectList(_db.Producers, "Id", "Name");
-            ViewBag.Actors = _db.Actors.ToList();
+            ViewBag.ProducerId = new SelectList(movieRepository.GetAllProducers(), "Id", "Name");
+            ViewBag.Actors = movieRepository.GetAllActors().ToList();
             return View("Form");
         }
 
         // POST: Movies/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,Name,ReleaseDate,Plot,ProducerId")] Movie movie)
@@ -53,42 +59,27 @@ namespace Moviedb.Controllers
             {
                 try
                 {
-                    String[] str = Request["Actors"].Split(',');
+                    String[] actorIds = Request["Actors"].Split(',');
+                    movie.MoviePosterPath = SaveFile(Request.Files[0]);
 
-                    if (Request.Files.Count > 0)
-                    {
-                        HttpPostedFileBase file = Request.Files[0];
+                    for (int i = 0; i < actorIds.Length; i++)
+                        movie.Actors.Add(movieRepository.FindActor(int.Parse(actorIds[i])));
 
-                        // ReSharper disable once PossibleNullReferenceException
-                        var fileName = file.FileName;
-                        if (fileName != "")
-                        {
-                            var path = "D:\\Images\\MoviePosters\\";
-                            var myfileName = DateTime.UtcNow.ToString("yyyyMMddHHmmssfff") + "_" + fileName;
-                            var myFilePath = path + myfileName;
-                            var filePathWebPage = "http://moviedb.kishan.com/moviePosters/" + myfileName;
-                            file.SaveAs(myFilePath);
-                            movie.MoviePosterPath = filePathWebPage;
-                        }
-                    }
-                    for (int i = 0; i < str.Length; i++)
-                        movie.Actors.Add(_db.Actors.Find(int.Parse(str[i])));
-
-                    _db.Movies.Add(movie);
-                    _db.SaveChanges();
+                    movieRepository.AddMovieToDb(movie);
+                    movieRepository.SaveChanges();
                     return RedirectToAction("Index");
                 }
                 catch (Exception)
                 {
-                    ViewBag.ProducerId = new SelectList(_db.Producers, "Id", "Name");
-                    ViewBag.Actors = _db.Actors.ToList();
+                    ViewBag.ProducerId = new SelectList(movieRepository.GetAllProducers(), "Id", "Name");
+                    ViewBag.Actors = movieRepository.GetAllActors();
 
                     return Create();
                 }
             }
 
-            ViewBag.ProducerId = new SelectList(_db.Producers, "Id", "Name", movie.ProducerId);
-            ViewBag.Actors = _db.Actors.ToList();
+            ViewBag.ProducerId = new SelectList(movieRepository.GetAllProducers(), "Id", "Name", movie.ProducerId);
+            ViewBag.Actors = movieRepository.GetAllActors();
             return View("Form");
         }
 
@@ -99,17 +90,17 @@ namespace Moviedb.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Movie movie = _db.Movies.Find(id);
+            Movie movie = movieRepository.FindMovie(id);
             if (movie == null)
             {
                 return HttpNotFound();
             }
 
-            ViewBag.ProducerId = new SelectList(_db.Producers, "Id", "Name", movie.ProducerId);
+            ViewBag.ProducerId = new SelectList(movieRepository.GetAllProducers(), "Id", "Name", movie.ProducerId);
             ViewBag.NewProducer = new Producer();
             ViewBag.NewActor = new Actor();
-            ViewBag.Actors = _db.Actors.ToList();
-            return View("Form",movie);
+            ViewBag.Actors = movieRepository.GetAllActors();
+            return View("Form", movie);
         }
 
         // POST: Movies/Edit/5
@@ -131,12 +122,12 @@ namespace Moviedb.Controllers
                     return Edit(movie.Id);
                 }
 
-                var movieDb = _db.Movies.Single(m => m.Id == movie.Id);
+                var movieDb = movieRepository.FindMovie(movie.Id);
                 for (int i = 0; i < str.Length; i++)
                 {
                     try
                     {
-                        movieDb.Actors.Add(_db.Actors.Find(int.Parse(str[i])));
+                        movieDb.Actors.Add(movieRepository.FindActor(int.Parse(str[i])));
                     }
                     catch (Exception e)
                     {
@@ -150,12 +141,12 @@ namespace Moviedb.Controllers
                 movieDb.ProducerId = movie.ProducerId;
                 //movieDb.Actors = movie.Actors;
 
-                _db.SaveChanges();
+                movieRepository.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.ProducerId = new SelectList(_db.Producers, "Id", "Name", movie.ProducerId);
+            ViewBag.ProducerId = new SelectList(movieRepository.GetAllProducers(), "Id", "Name", movie.ProducerId);
 
-            return View(movie);
+            return View("Form", movie);
         }
 
         // GET: Movies/Delete/5
@@ -165,7 +156,7 @@ namespace Moviedb.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Movie movie = _db.Movies.Find(id);
+            Movie movie = movieRepository.FindMovie(id);
             if (movie == null)
             {
                 return HttpNotFound();
@@ -176,15 +167,14 @@ namespace Moviedb.Controllers
         [HttpPost]
         public ActionResult DeleteAjax(int id)
         {
-            Movie movie = _db.Movies.Find(id);
-            _db.Movies.Remove(movie ?? throw new Exception());
-            _db.SaveChanges();
-            
+            Movie movie = movieRepository.FindMovie(id);
+            movieRepository.RemoveMovie(movie);
+            movieRepository.SaveChanges();
+
             if (movie.MoviePosterPath != null)
             {
-
                 var filePath = "D:\\Images\\MoviePosters\\" + movie.MoviePosterPath.Split('/').Last();
-                if(System.IO.File.Exists(filePath))
+                if (System.IO.File.Exists(filePath))
                     System.IO.File.Delete(filePath);
             }
 
@@ -196,17 +186,32 @@ namespace Moviedb.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Movie movie = _db.Movies.Find(id);
-            _db.Movies.Remove(movie ?? throw new InvalidOperationException());
-            _db.SaveChanges();
+            Movie movie = movieRepository.FindMovie(id);
+            movieRepository.RemoveMovie(movie ?? throw new InvalidOperationException());
+            movieRepository.SaveChanges();
             return RedirectToAction("Index");
+        }
+
+        private string SaveFile(HttpPostedFileBase file)
+        {
+            if (!String.IsNullOrEmpty(file.FileName))
+            {
+                var path = "D:\\Images\\MoviePosters\\";
+                var myfileName = $"{DateTime.UtcNow:yyyyMMddHHmmssfff}_{file.FileName}";
+                var myFilePath = path + myfileName;
+                var filePathWebPage = "http://moviedb.kishan.com/moviePosters/" + myfileName;
+                file.SaveAs(myFilePath);
+                return filePathWebPage;
+            }
+
+            return null;
         }
 
         protected override void Dispose(bool disposing)
         {
             if (disposing)
             {
-                _db.Dispose();
+                movieRepository.Dispose();
             }
             base.Dispose(disposing);
         }

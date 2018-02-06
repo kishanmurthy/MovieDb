@@ -5,14 +5,14 @@ namespace Moviedb.Migrations
     using System.Data.Entity.Migrations;
     using System.Linq;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<Moviedb.Models.MyDbContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<Moviedb.Models.MovieDbContext>
     {
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
         }
 
-        protected override void Seed(Moviedb.Models.MyDbContext context)
+        protected override void Seed(Moviedb.Models.MovieDbContext context)
         {
             //  This method will be called after migrating to the latest version.
 

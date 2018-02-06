@@ -2,7 +2,7 @@ namespace Moviedb.Models
 {
     using System.Data.Entity;
 
-    public class MyDbContext : DbContext
+    public class MovieDbContext : DbContext
     {
         // Your context has been configured to use a 'MyDBContext' connection string from your application's
         // configuration file (App.config or Web.config). By default, this connection string targets the
@@ -10,7 +10,7 @@ namespace Moviedb.Models
         //
         // If you wish to target a different database and/or database provider, modify the 'MyDBContext'
         // connection string in the application configuration file.
-        public MyDbContext()
+        public MovieDbContext()
             : base("name=MyDBContext")
         {
         }

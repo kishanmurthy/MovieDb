@@ -8,7 +8,7 @@ namespace Moviedb.Controllers
 {
     public class ProducersController : Controller
     {
-        private MyDbContext db = new MyDbContext();
+        private MovieDbContext db = new MovieDbContext();
 
         // GET: Producers
         public ActionResult Index()
