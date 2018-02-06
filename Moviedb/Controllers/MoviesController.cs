@@ -48,6 +48,7 @@ namespace Moviedb.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,Name,ReleaseDate,Plot,ProducerId")] Movie movie)
         {
+            ModelState.Remove("Id");
             if (ModelState.IsValid)
             {
                 try
@@ -86,6 +87,7 @@ namespace Moviedb.Controllers
             }
 
             ViewBag.ProducerId = new SelectList(db.Producers, "Id", "Name", movie.ProducerId);
+            ViewBag.Actors = db.Actors.ToList();
             return View("Form");
         }
 
