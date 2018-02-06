@@ -243,6 +243,7 @@
     <Content Include="Views\Movies\GetActors.cshtml" />
     <Content Include="Views\Shared\CreateActor.cshtml" />
     <Content Include="Views\Shared\CreateProducer.cshtml" />
+    <Content Include="Views\Movies\Form.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

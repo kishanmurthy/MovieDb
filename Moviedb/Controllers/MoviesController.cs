@@ -38,7 +38,7 @@ namespace Moviedb.Controllers
         {
             ViewBag.ProducerId = new SelectList(db.Producers, "Id", "Name");
             ViewBag.Actors = db.Actors.ToList();
-            return View();
+            return View("Form");
         }
 
         // POST: Movies/Create
@@ -86,7 +86,7 @@ namespace Moviedb.Controllers
             }
 
             ViewBag.ProducerId = new SelectList(db.Producers, "Id", "Name", movie.ProducerId);
-            return View(movie);
+            return View("Form");
         }
 
         // GET: Movies/Edit/5
@@ -106,7 +106,7 @@ namespace Moviedb.Controllers
             ViewBag.NewProducer = new Producer();
             ViewBag.NewActor = new Actor();
             ViewBag.Actors = db.Actors.ToList();
-            return View(movie);
+            return View("Form",movie);
         }
 
         // POST: Movies/Edit/5
