@@ -203,6 +203,7 @@
     <Content Include="Scripts\chosen.jquery.min.js" />
     <Content Include="Scripts\chosen.proto.js" />
     <Content Include="Scripts\chosen.proto.min.js" />
+    <Content Include="Scripts\Index.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
@@ -214,6 +215,7 @@
     <Content Include="Scripts\prototype.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\Form.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

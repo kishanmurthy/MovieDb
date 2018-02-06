@@ -4,7 +4,7 @@
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
+<script src="~/Scripts/Index.js"></script>
 <h2>Movies</h2>
 
 <p>
@@ -77,24 +77,3 @@
         </tr>
     }
 </table>
-
-<script>
-    function deleteMovie(id) {
-
-        var delMovie = confirm("Do you want to delete the movie");
-
-        if (delMovie == true) {
-            $.ajax({
-                type: "POST",
-                url: "/Movies/DeleteAjax",
-                data: { id },
-                success: function (response) {
-                    document.MyResponseDelete = response;
-                    console.log("Success");
-                    var row = document.getElementById(id);
-                    row.parentNode.removeChild(row);
-                }
-            });
-        }
-    }
-</script>
