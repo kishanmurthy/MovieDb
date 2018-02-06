@@ -37,6 +37,8 @@ namespace Moviedb.Controllers
         public ActionResult Create()
         {
             ViewBag.ProducerId = new SelectList(db.Producers, "Id", "Name");
+            ViewBag.NewProducer = new Producer();
+            ViewBag.NewActor = new Actor();
             ViewBag.Actors = db.Actors.ToList();
             return View();
         }
@@ -79,12 +81,16 @@ namespace Moviedb.Controllers
                 catch (Exception e)
                 {
                     ViewBag.ProducerId = new SelectList(db.Producers, "Id", "Name");
+                    ViewBag.NewProducer = new Producer();
+                    ViewBag.NewActor = new Actor();
                     ViewBag.Actors = db.Actors.ToList();
 
                     return Create();
                 }
             }
-
+            ViewBag.NewProducer = new Producer();
+            ViewBag.NewActor = new Actor();
+            ViewBag.Actors = db.Actors.ToList();
             ViewBag.ProducerId = new SelectList(db.Producers, "Id", "Name", movie.ProducerId);
             return View(movie);
         }
