@@ -1,19 +1,24 @@
-﻿using System.Data.Entity;
-using System.Linq;
-using System.Net;
+﻿using System.Net;
 using System.Web.Mvc;
 using Moviedb.Models;
-
+using Moviedb.Repository;
 namespace Moviedb.Controllers
 {
     public class ProducersController : Controller
     {
-        private MovieDbContext db = new MovieDbContext();
+        
 
+        private MovieRepository movieRepository;
+
+        public ProducersController()
+        {
+            movieRepository = new MovieRepository();
+
+        }
         // GET: Producers
         public ActionResult Index()
         {
-            return View(db.Producers.ToList());
+            return View(movieRepository.GetAllProducers());
         }
 
         // GET: Producers/Details/5
@@ -23,7 +28,7 @@ namespace Moviedb.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Producer producer = db.Producers.Find(id);
+            Producer producer = movieRepository.FindProducer(id);
             if (producer == null)
             {
                 return HttpNotFound();
@@ -51,8 +56,8 @@ namespace Moviedb.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Producers.Add(producer);
-                db.SaveChanges();
+                movieRepository.AddProducerToDb(producer);
+                movieRepository.SaveChanges();
 
                 
                 return Json(producer);
@@ -70,8 +75,8 @@ namespace Moviedb.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Producers.Add(producer);
-                db.SaveChanges();
+                movieRepository.AddProducerToDb(producer);
+                movieRepository.SaveChanges();
                 return RedirectToAction("Index");
             }
 
@@ -85,7 +90,8 @@ namespace Moviedb.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Producer producer = db.Producers.Find(id);
+
+            Producer producer = movieRepository.FindProducer(id);
             if (producer == null)
             {
                 return HttpNotFound();
@@ -102,8 +108,8 @@ namespace Moviedb.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(producer).State = EntityState.Modified;
-                db.SaveChanges();
+                movieRepository.UpdateProducer(producer);
+                movieRepository.SaveChanges();
                 return RedirectToAction("Index");
             }
             return View(producer);
@@ -116,7 +122,8 @@ namespace Moviedb.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Producer producer = db.Producers.Find(id);
+
+            Producer producer = movieRepository.FindProducer(id);
             if (producer == null)
             {
                 return HttpNotFound();
@@ -129,9 +136,10 @@ namespace Moviedb.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Producer producer = db.Producers.Find(id);
-            if (producer != null) db.Producers.Remove(producer);
-            db.SaveChanges();
+            Producer producer = movieRepository.FindProducer(id);
+            if (producer != null)
+                movieRepository.RemoveProducer(producer);
+            movieRepository.SaveChanges();
             return RedirectToAction("Index");
         }
 
@@ -139,7 +147,7 @@ namespace Moviedb.Controllers
         {
             if (disposing)
             {
-                db.Dispose();
+                movieRepository.Dispose();
             }
             base.Dispose(disposing);
         }

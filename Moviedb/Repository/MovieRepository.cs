@@ -56,7 +56,10 @@ namespace Moviedb.Repository
         {
             _movieDbContext.Actors.Add(actor);
         }
-
+        public void AddProducerToDb(Producer producer)
+        {
+            _movieDbContext.Producers.Add(producer);
+        }
 
 
         public void UpdateActor(Actor actor)
@@ -64,6 +67,10 @@ namespace Moviedb.Repository
             _movieDbContext.Entry(actor).State = EntityState.Modified;
         }
 
+        public void UpdateProducer(Producer producer)
+        {
+            _movieDbContext.Entry(producer).State = EntityState.Modified;
+        }
         public void RemoveMovie(Movie movie)
         {
             _movieDbContext.Movies.Remove(movie ?? throw new Exception());
@@ -73,7 +80,10 @@ namespace Moviedb.Repository
         {
             _movieDbContext.Actors.Remove(actor ?? throw new Exception());
         }
-
+        public void RemoveProducer(Producer producer)
+        {
+            _movieDbContext.Producers.Remove(producer ?? throw new Exception());
+        }
         public void SaveChanges()
         {
             _movieDbContext.SaveChanges();
