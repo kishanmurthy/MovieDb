@@ -1,4 +1,5 @@
-﻿using Moviedb.Models;
+﻿using System;
+using Moviedb.Models;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
@@ -8,7 +9,7 @@ namespace Moviedb.Controllers
 {
     public class ActorsController : Controller
     {
-        private MyDBContext db = new MyDBContext();
+        private MyDbContext db = new MyDbContext();
 
         // GET: Actors
         public ActionResult Index()
@@ -127,7 +128,7 @@ namespace Moviedb.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             Actor actor = db.Actors.Find(id);
-            db.Actors.Remove(actor);
+            db.Actors.Remove(actor ?? throw new InvalidOperationException());
             db.SaveChanges();
             return RedirectToAction("Index");
         }

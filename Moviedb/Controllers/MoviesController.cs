@@ -9,12 +9,12 @@ namespace Moviedb.Controllers
 {
     public class MoviesController : Controller
     {
-        private MyDBContext db = new MyDBContext();
+        private readonly MyDbContext _db = new MyDbContext();
 
         // GET: Movies
         public ActionResult Index()
         {
-            var movies = db.Movies.Include(m => m.Producer).Include(m => m.Actors);
+            var movies = _db.Movies.Include(m => m.Producer).Include(m => m.Actors);
             return View(movies.ToList());
         }
 
@@ -25,7 +25,7 @@ namespace Moviedb.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Movie movie = db.Movies.Find(id);
+            Movie movie = _db.Movies.Find(id);
             if (movie == null)
             {
                 return HttpNotFound();
@@ -36,8 +36,8 @@ namespace Moviedb.Controllers
         // GET: Movies/Create
         public ActionResult Create()
         {
-            ViewBag.ProducerId = new SelectList(db.Producers, "Id", "Name");
-            ViewBag.Actors = db.Actors.ToList();
+            ViewBag.ProducerId = new SelectList(_db.Producers, "Id", "Name");
+            ViewBag.Actors = _db.Actors.ToList();
             return View("Form");
         }
 
@@ -59,35 +59,36 @@ namespace Moviedb.Controllers
                     {
                         HttpPostedFileBase file = Request.Files[0];
 
+                        // ReSharper disable once PossibleNullReferenceException
                         var fileName = file.FileName;
                         if (fileName != "")
                         {
                             var path = "D:\\Images\\MoviePosters\\";
-                            var MyfileName = DateTime.UtcNow.ToString("yyyyMMddHHmmssfff") + "_" + fileName;
-                            var MyFilePath = path + MyfileName;
-                            var filePathWebPage = "http://moviedb.kishan.com/moviePosters/" + MyfileName;
-                            file.SaveAs(MyFilePath);
+                            var myfileName = DateTime.UtcNow.ToString("yyyyMMddHHmmssfff") + "_" + fileName;
+                            var myFilePath = path + myfileName;
+                            var filePathWebPage = "http://moviedb.kishan.com/moviePosters/" + myfileName;
+                            file.SaveAs(myFilePath);
                             movie.MoviePosterPath = filePathWebPage;
                         }
                     }
                     for (int i = 0; i < str.Length; i++)
-                        movie.Actors.Add(db.Actors.Find(int.Parse(str[i])));
+                        movie.Actors.Add(_db.Actors.Find(int.Parse(str[i])));
 
-                    db.Movies.Add(movie);
-                    db.SaveChanges();
+                    _db.Movies.Add(movie);
+                    _db.SaveChanges();
                     return RedirectToAction("Index");
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
-                    ViewBag.ProducerId = new SelectList(db.Producers, "Id", "Name");
-                    ViewBag.Actors = db.Actors.ToList();
+                    ViewBag.ProducerId = new SelectList(_db.Producers, "Id", "Name");
+                    ViewBag.Actors = _db.Actors.ToList();
 
                     return Create();
                 }
             }
 
-            ViewBag.ProducerId = new SelectList(db.Producers, "Id", "Name", movie.ProducerId);
-            ViewBag.Actors = db.Actors.ToList();
+            ViewBag.ProducerId = new SelectList(_db.Producers, "Id", "Name", movie.ProducerId);
+            ViewBag.Actors = _db.Actors.ToList();
             return View("Form");
         }
 
@@ -98,16 +99,16 @@ namespace Moviedb.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Movie movie = db.Movies.Find(id);
+            Movie movie = _db.Movies.Find(id);
             if (movie == null)
             {
                 return HttpNotFound();
             }
 
-            ViewBag.ProducerId = new SelectList(db.Producers, "Id", "Name", movie.ProducerId);
+            ViewBag.ProducerId = new SelectList(_db.Producers, "Id", "Name", movie.ProducerId);
             ViewBag.NewProducer = new Producer();
             ViewBag.NewActor = new Actor();
-            ViewBag.Actors = db.Actors.ToList();
+            ViewBag.Actors = _db.Actors.ToList();
             return View("Form",movie);
         }
 
@@ -130,16 +131,16 @@ namespace Moviedb.Controllers
                     return Edit(movie.Id);
                 }
 
-                var movieDb = db.Movies.Single(m => m.Id == movie.Id);
+                var movieDb = _db.Movies.Single(m => m.Id == movie.Id);
                 for (int i = 0; i < str.Length; i++)
                 {
                     try
                     {
-                        movieDb.Actors.Add(db.Actors.Find(int.Parse(str[i])));
+                        movieDb.Actors.Add(_db.Actors.Find(int.Parse(str[i])));
                     }
-                    catch (Exception E)
+                    catch (Exception e)
                     {
-                        Console.WriteLine("Exception {0}", E);
+                        Console.WriteLine(@"Exception {0}", e);
                     }
                 }
 
@@ -149,10 +150,10 @@ namespace Moviedb.Controllers
                 movieDb.ProducerId = movie.ProducerId;
                 //movieDb.Actors = movie.Actors;
 
-                db.SaveChanges();
+                _db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.ProducerId = new SelectList(db.Producers, "Id", "Name", movie.ProducerId);
+            ViewBag.ProducerId = new SelectList(_db.Producers, "Id", "Name", movie.ProducerId);
 
             return View(movie);
         }
@@ -164,7 +165,7 @@ namespace Moviedb.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Movie movie = db.Movies.Find(id);
+            Movie movie = _db.Movies.Find(id);
             if (movie == null)
             {
                 return HttpNotFound();
@@ -175,9 +176,9 @@ namespace Moviedb.Controllers
         [HttpPost]
         public ActionResult DeleteAjax(int id)
         {
-            Movie movie = db.Movies.Find(id);
-            db.Movies.Remove(movie);
-            db.SaveChanges();
+            Movie movie = _db.Movies.Find(id);
+            _db.Movies.Remove(movie ?? throw new Exception());
+            _db.SaveChanges();
             
             if (movie.MoviePosterPath != null)
             {
@@ -195,23 +196,17 @@ namespace Moviedb.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Movie movie = db.Movies.Find(id);
-            db.Movies.Remove(movie);
-            db.SaveChanges();
+            Movie movie = _db.Movies.Find(id);
+            _db.Movies.Remove(movie ?? throw new InvalidOperationException());
+            _db.SaveChanges();
             return RedirectToAction("Index");
-        }
-
-        public ActionResult GetActors()
-        {
-            var actors = db.Actors.ToList();
-            return PartialView();
         }
 
         protected override void Dispose(bool disposing)
         {
             if (disposing)
             {
-                db.Dispose();
+                _db.Dispose();
             }
             base.Dispose(disposing);
         }

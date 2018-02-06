@@ -36,6 +36,6 @@ textarea {
 }
 
 
-chosen-container chosen-container-multi{
+.chosen-container .chosen-container-multi{
     width:200px;
 }

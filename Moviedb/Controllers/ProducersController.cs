@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
+﻿using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
 using Moviedb.Models;
 
@@ -12,7 +8,7 @@ namespace Moviedb.Controllers
 {
     public class ProducersController : Controller
     {
-        private MyDBContext db = new MyDBContext();
+        private MyDbContext db = new MyDbContext();
 
         // GET: Producers
         public ActionResult Index()
@@ -134,7 +130,7 @@ namespace Moviedb.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             Producer producer = db.Producers.Find(id);
-            db.Producers.Remove(producer);
+            if (producer != null) db.Producers.Remove(producer);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

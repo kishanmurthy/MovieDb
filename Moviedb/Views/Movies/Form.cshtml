@@ -5,6 +5,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+
 <script src="~/Scripts/chosen.jquery.js"></script>
 <link href="~/Content/chosen.css" rel="stylesheet" />
 <script src="~/Scripts/Form.js"></script>
@@ -20,7 +21,7 @@
         <h2>Edit</h2>
     }
 }
-@using (Html.BeginForm())
+@using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
 
@@ -68,6 +69,7 @@
             @Html.LabelFor(model => model.Actors, "Actors", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
 
+                @* ReSharper disable once UnknownCssClass *@
                 <select class="actor_dropdown" multiple="multiple" name="Actors">
 
                     @{

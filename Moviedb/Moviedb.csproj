@@ -151,7 +151,6 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\ActorsController.cs" />
-    <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MoviesController.cs" />
     <Compile Include="Controllers\ProducersController.cs" />
     <Compile Include="Global.asax.cs">
@@ -216,6 +215,7 @@
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\Form.js" />
+    <Content Include="Scripts\ValidateDate.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -232,17 +232,14 @@
     <Content Include="Views\Producers\Details.cshtml" />
     <Content Include="Views\Producers\Edit.cshtml" />
     <Content Include="Views\Producers\Index.cshtml" />
-    <Content Include="Views\Movies\Create.cshtml" />
     <Content Include="Views\Movies\Delete.cshtml" />
     <Content Include="Views\Movies\Details.cshtml" />
-    <Content Include="Views\Movies\Edit.cshtml" />
     <Content Include="Views\Movies\Index.cshtml" />
     <Content Include="Views\Actors\Create.cshtml" />
     <Content Include="Views\Actors\Delete.cshtml" />
     <Content Include="Views\Actors\Details.cshtml" />
     <Content Include="Views\Actors\Edit.cshtml" />
     <Content Include="Views\Actors\Index.cshtml" />
-    <Content Include="Views\Movies\GetActors.cshtml" />
     <Content Include="Views\Shared\CreateActor.cshtml" />
     <Content Include="Views\Shared\CreateProducer.cshtml" />
     <Content Include="Views\Movies\Form.cshtml" />
