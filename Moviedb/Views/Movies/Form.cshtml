@@ -53,9 +53,17 @@
 
     }
 </script>
+@{
 
-<h2>Edit</h2>
-
+    if (Model == null)
+    {
+        <h2>New</h2>
+    }
+    else
+    {
+        <h2>Edit</h2>
+    }
+}
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
@@ -109,10 +117,10 @@
                     @{
                         foreach (var actor in ViewBag.Actors)
                         {
-                           
 
 
-                            if (Model!= null && Model.Actors.Contains(actor))
+
+                            if (Model != null && Model.Actors.Contains(actor))
                             {
                                 <option value=@actor.Id selected>@actor.Name</option>
 
@@ -127,6 +135,20 @@
                 <button type="button" class="btn btn-default" data-target="#MyModalActor" data-toggle="modal">New Actor</button>
             </div>
         </div>
+
+        @{
+
+            if (Model == null)
+            {
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.MoviePosterPath, "Movie Poster", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <input type="file" name="MoviePoster" id="MoviePoster" accept="image/*" />
+                    </div>
+                </div>
+            }
+        }
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Save" class="btn btn-primary" />
