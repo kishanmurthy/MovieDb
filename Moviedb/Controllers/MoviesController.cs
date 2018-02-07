@@ -21,7 +21,7 @@ namespace Moviedb.Controllers
         // GET: Movies
         public ActionResult Index()
         {
-            var t = movieRepository.GetMovies().ToList();
+            var t = movieRepository.GetMovies();
             return View(t);
         }
 
@@ -45,7 +45,7 @@ namespace Moviedb.Controllers
         public ActionResult Create()
         {
             ViewBag.ProducerId = new SelectList(movieRepository.GetProducers(), "Id", "Name");
-            ViewBag.Actors = movieRepository.GetActors().ToList();
+            ViewBag.Actors = movieRepository.GetActors();
             return View("Form");
         }
 
