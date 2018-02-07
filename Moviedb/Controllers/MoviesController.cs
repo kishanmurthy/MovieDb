@@ -21,24 +21,17 @@ namespace Moviedb.Controllers
         // GET: Movies
         public ActionResult Index()
         {
-            var t = movieRepository.GetMovies();
-            return View(t);
+            return View(movieRepository.GetMovies());
         }
 
         // GET: Movies/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
-            {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
 
             Movie movie = movieRepository.GetMovie(id);
-            if (movie == null)
-            {
-                return HttpNotFound();
-            }
-            return View(movie);
+            return movie == null ? (ActionResult)HttpNotFound() : View(movie);
         }
 
         // GET: Movies/Create
