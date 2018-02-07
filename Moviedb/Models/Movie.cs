@@ -4,10 +4,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Moviedb.Models
 {
-    public sealed class Movie
+    public class Movie
     {
         public Movie()
         {
+            
             Actors = new HashSet<Actor>();
         }
 
@@ -28,8 +29,8 @@ namespace Moviedb.Models
         [Display(Name = "Producer")]
         public int ProducerId { get; set; }
 
-        public Producer Producer { get; set; }
+        public virtual Producer Producer { get; set; }
 
-        public ICollection<Actor> Actors { get; set; }
+        public virtual ICollection<Actor> Actors { get; set; }
     }
 }

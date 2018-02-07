@@ -8,7 +8,7 @@ using Moviedb.Models;
 
 namespace Moviedb.Repository
 {
-    public class MovieRepository : IMovieDb ,IDisposable
+    public class MovieRepository : IDisposable
     {
 
         private readonly MovieDbContext _movieDbContext;
@@ -32,19 +32,19 @@ namespace Moviedb.Repository
             return _movieDbContext.Producers.Find(id);
         }
 
-        public IQueryable<Actor> GetAllActors()
+        public IEnumerable<Actor> GetAllActors()
         {
             return _movieDbContext.Actors;
         }
 
-        public IQueryable<Movie> GetAllMovies()
+        public IEnumerable<Movie> GetAllMovies()
         {
-            return _movieDbContext.Movies.Include("Producer").Include("Actors");
+            return _movieDbContext.Movies.Include(m => m.Producer).Include(m => m.Actors).ToList();
         }
 
-        public IQueryable<Producer> GetAllProducers()
+        public IEnumerable<Producer> GetAllProducers()
         {
-            return _movieDbContext.Producers;
+            return _movieDbContext.Producers.ToList();
         }
 
         public void AddMovieToDb(Movie movie)
