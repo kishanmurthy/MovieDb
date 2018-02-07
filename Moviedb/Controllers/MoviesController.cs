@@ -21,7 +21,7 @@ namespace Moviedb.Controllers
         // GET: Movies
         public ActionResult Index()
         {
-            var t = movieRepository.GetAllMovies().ToList();
+            var t = movieRepository.GetMovies().ToList();
             return View(t);
         }
 
@@ -33,7 +33,7 @@ namespace Moviedb.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            Movie movie = movieRepository.FindMovie(id);
+            Movie movie = movieRepository.GetMovie(id);
             if (movie == null)
             {
                 return HttpNotFound();
@@ -44,8 +44,8 @@ namespace Moviedb.Controllers
         // GET: Movies/Create
         public ActionResult Create()
         {
-            ViewBag.ProducerId = new SelectList(movieRepository.GetAllProducers(), "Id", "Name");
-            ViewBag.Actors = movieRepository.GetAllActors().ToList();
+            ViewBag.ProducerId = new SelectList(movieRepository.GetProducers(), "Id", "Name");
+            ViewBag.Actors = movieRepository.GetActors().ToList();
             return View("Form");
         }
 
@@ -63,23 +63,23 @@ namespace Moviedb.Controllers
                     movie.MoviePosterPath = SaveFile(Request.Files[0]);
 
                     for (int i = 0; i < actorIds.Length; i++)
-                        movie.Actors.Add(movieRepository.FindActor(int.Parse(actorIds[i])));
+                        movie.Actors.Add(movieRepository.GetActor(int.Parse(actorIds[i])));
 
-                    movieRepository.AddMovieToDb(movie);
+                    movieRepository.AddMovie(movie);
                     movieRepository.SaveChanges();
                     return RedirectToAction("Index");
                 }
                 catch (Exception)
                 {
-                    ViewBag.ProducerId = new SelectList(movieRepository.GetAllProducers(), "Id", "Name");
-                    ViewBag.Actors = movieRepository.GetAllActors();
+                    ViewBag.ProducerId = new SelectList(movieRepository.GetProducers(), "Id", "Name");
+                    ViewBag.Actors = movieRepository.GetActors();
 
                     return Create();
                 }
             }
 
-            ViewBag.ProducerId = new SelectList(movieRepository.GetAllProducers(), "Id", "Name", movie.ProducerId);
-            ViewBag.Actors = movieRepository.GetAllActors();
+            ViewBag.ProducerId = new SelectList(movieRepository.GetProducers(), "Id", "Name", movie.ProducerId);
+            ViewBag.Actors = movieRepository.GetActors();
             return View("Form");
         }
 
@@ -90,16 +90,16 @@ namespace Moviedb.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Movie movie = movieRepository.FindMovie(id);
+            Movie movie = movieRepository.GetMovie(id);
             if (movie == null)
             {
                 return HttpNotFound();
             }
 
-            ViewBag.ProducerId = new SelectList(movieRepository.GetAllProducers(), "Id", "Name", movie.ProducerId);
+            ViewBag.ProducerId = new SelectList(movieRepository.GetProducers(), "Id", "Name", movie.ProducerId);
             ViewBag.NewProducer = new Producer();
             ViewBag.NewActor = new Actor();
-            ViewBag.Actors = movieRepository.GetAllActors();
+            ViewBag.Actors = movieRepository.GetActors();
             return View("Form", movie);
         }
 
@@ -122,12 +122,12 @@ namespace Moviedb.Controllers
                     return Edit(movie.Id);
                 }
 
-                var movieDb = movieRepository.FindMovie(movie.Id);
+                var movieDb = movieRepository.GetMovie(movie.Id);
                 for (int i = 0; i < str.Length; i++)
                 {
                     try
                     {
-                        movieDb.Actors.Add(movieRepository.FindActor(int.Parse(str[i])));
+                        movieDb.Actors.Add(movieRepository.GetActor(int.Parse(str[i])));
                     }
                     catch (Exception e)
                     {
@@ -144,7 +144,7 @@ namespace Moviedb.Controllers
                 movieRepository.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.ProducerId = new SelectList(movieRepository.GetAllProducers(), "Id", "Name", movie.ProducerId);
+            ViewBag.ProducerId = new SelectList(movieRepository.GetProducers(), "Id", "Name", movie.ProducerId);
 
             return View("Form", movie);
         }
@@ -156,7 +156,7 @@ namespace Moviedb.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Movie movie = movieRepository.FindMovie(id);
+            Movie movie = movieRepository.GetMovie(id);
             if (movie == null)
             {
                 return HttpNotFound();
@@ -167,7 +167,7 @@ namespace Moviedb.Controllers
         [HttpPost]
         public ActionResult DeleteAjax(int id)
         {
-            Movie movie = movieRepository.FindMovie(id);
+            Movie movie = movieRepository.GetMovie(id);
             movieRepository.RemoveMovie(movie);
             movieRepository.SaveChanges();
 
@@ -186,7 +186,7 @@ namespace Moviedb.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Movie movie = movieRepository.FindMovie(id);
+            Movie movie = movieRepository.GetMovie(id);
             movieRepository.RemoveMovie(movie ?? throw new InvalidOperationException());
             movieRepository.SaveChanges();
             return RedirectToAction("Index");

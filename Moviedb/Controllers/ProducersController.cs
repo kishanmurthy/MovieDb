@@ -18,7 +18,7 @@ namespace Moviedb.Controllers
         // GET: Producers
         public ActionResult Index()
         {
-            return View(movieRepository.GetAllProducers());
+            return View(movieRepository.GetProducers());
         }
 
         // GET: Producers/Details/5
@@ -28,7 +28,7 @@ namespace Moviedb.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Producer producer = movieRepository.FindProducer(id);
+            Producer producer = movieRepository.GetProducer(id);
             if (producer == null)
             {
                 return HttpNotFound();
@@ -56,7 +56,7 @@ namespace Moviedb.Controllers
         {
             if (ModelState.IsValid)
             {
-                movieRepository.AddProducerToDb(producer);
+                movieRepository.AddProducer(producer);
                 movieRepository.SaveChanges();
 
                 
@@ -75,7 +75,7 @@ namespace Moviedb.Controllers
         {
             if (ModelState.IsValid)
             {
-                movieRepository.AddProducerToDb(producer);
+                movieRepository.AddProducer(producer);
                 movieRepository.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -91,7 +91,7 @@ namespace Moviedb.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            Producer producer = movieRepository.FindProducer(id);
+            Producer producer = movieRepository.GetProducer(id);
             if (producer == null)
             {
                 return HttpNotFound();
@@ -123,7 +123,7 @@ namespace Moviedb.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            Producer producer = movieRepository.FindProducer(id);
+            Producer producer = movieRepository.GetProducer(id);
             if (producer == null)
             {
                 return HttpNotFound();
@@ -136,7 +136,7 @@ namespace Moviedb.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Producer producer = movieRepository.FindProducer(id);
+            Producer producer = movieRepository.GetProducer(id);
             if (producer != null)
                 movieRepository.RemoveProducer(producer);
             movieRepository.SaveChanges();

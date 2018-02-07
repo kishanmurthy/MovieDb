@@ -18,7 +18,7 @@ namespace Moviedb.Controllers
         // GET: Actors
         public ActionResult Index()
         {
-            return View(movieRepository.GetAllActors());
+            return View(movieRepository.GetActors());
         }
 
         // GET: Actors/Details/5
@@ -28,7 +28,7 @@ namespace Moviedb.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Actor actor = movieRepository.FindActor(id);
+            Actor actor = movieRepository.GetActor(id);
             if (actor == null)
             {
                 return HttpNotFound();
@@ -54,7 +54,7 @@ namespace Moviedb.Controllers
         {
             if (ModelState.IsValid)
             {
-                movieRepository.AddActorToDb(actor);
+                movieRepository.AddActor(actor);
                 movieRepository.SaveChanges();   
 
                 return Json(actor);
@@ -72,7 +72,7 @@ namespace Moviedb.Controllers
         {
             if (ModelState.IsValid)
             {
-                movieRepository.AddActorToDb(actor);
+                movieRepository.AddActor(actor);
                 movieRepository.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -88,7 +88,7 @@ namespace Moviedb.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            Actor actor = movieRepository.FindActor(id);
+            Actor actor = movieRepository.GetActor(id);
             if (actor == null)
             {
                 return HttpNotFound();
@@ -119,7 +119,7 @@ namespace Moviedb.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Actor actor = movieRepository.FindActor(id);
+            Actor actor = movieRepository.GetActor(id);
             if (actor == null)
             {
                 return HttpNotFound();
@@ -132,7 +132,7 @@ namespace Moviedb.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Actor actor = movieRepository.FindActor(id);
+            Actor actor = movieRepository.GetActor(id);
             movieRepository.RemoveActor(actor);
             movieRepository.SaveChanges();
             return RedirectToAction("Index");

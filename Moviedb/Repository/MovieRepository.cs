@@ -18,45 +18,45 @@ namespace Moviedb.Repository
             _movieDbContext = new MovieDbContext();
         }
 
-        public Movie FindMovie(int? id)
+        public Movie GetMovie(int? id)
         {
             return _movieDbContext.Movies.Find(id);
         }
 
-        public Actor FindActor(int? id)
+        public Actor GetActor(int? id)
         {
             return _movieDbContext.Actors.Find(id);
         }
-        public Producer FindProducer(int? id)
+        public Producer GetProducer(int? id)
         {
             return _movieDbContext.Producers.Find(id);
         }
 
-        public IEnumerable<Actor> GetAllActors()
+        public IEnumerable<Actor> GetActors()
         {
             return _movieDbContext.Actors;
         }
 
-        public IEnumerable<Movie> GetAllMovies()
+        public IEnumerable<Movie> GetMovies()
         {
             return _movieDbContext.Movies.Include(m => m.Producer).Include(m => m.Actors).ToList();
         }
 
-        public IEnumerable<Producer> GetAllProducers()
+        public IEnumerable<Producer> GetProducers()
         {
             return _movieDbContext.Producers.ToList();
         }
 
-        public void AddMovieToDb(Movie movie)
+        public void AddMovie(Movie movie)
         {
             _movieDbContext.Movies.Add(movie);
         }
 
-        public void AddActorToDb(Actor actor)
+        public void AddActor(Actor actor)
         {
             _movieDbContext.Actors.Add(actor);
         }
-        public void AddProducerToDb(Producer producer)
+        public void AddProducer(Producer producer)
         {
             _movieDbContext.Producers.Add(producer);
         }

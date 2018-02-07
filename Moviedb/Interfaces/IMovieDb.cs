@@ -8,13 +8,6 @@ namespace Moviedb.Interfaces
 
 
         Movie FindMovie(int? id);
-
-        IQueryable<Actor> GetAllActors();
-
-        IQueryable<Movie> GetAllMovies();
-
-        IQueryable<Producer> GetAllProducers();
-
         void SaveChanges();
     }
 }
