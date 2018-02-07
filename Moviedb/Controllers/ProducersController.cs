@@ -25,15 +25,11 @@ namespace Moviedb.Controllers
         public ActionResult Details(int? id)
         {
             if (id == null)
-            {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+            
             Producer producer = movieRepository.GetProducer(id);
-            if (producer == null)
-            {
-                return HttpNotFound();
-            }
-            return View(producer);
+            return (producer == null) ? (ActionResult) HttpNotFound() : View(producer);
+            
         }
 
         // GET: Producers/Create
@@ -87,9 +83,8 @@ namespace Moviedb.Controllers
         public ActionResult Edit(int? id)
         {
             if (id == null)
-            {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+            
 
             Producer producer = movieRepository.GetProducer(id);
             if (producer == null)
@@ -128,9 +123,8 @@ namespace Moviedb.Controllers
         protected override void Dispose(bool disposing)
         {
             if (disposing)
-            {
                 movieRepository.Dispose();
-            }
+            
             base.Dispose(disposing);
         }
     }

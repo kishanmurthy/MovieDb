@@ -81,14 +81,11 @@ namespace Moviedb.Controllers
         public ActionResult Edit(int? id)
         {
             if (id == null)
-            {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+            
             Movie movie = movieRepository.GetMovie(id);
             if (movie == null)
-            {
                 return HttpNotFound();
-            }
 
             ViewBag.ProducerId = new SelectList(movieRepository.GetProducers(), "Id", "Name", movie.ProducerId);
             ViewBag.NewProducer = new Producer();
@@ -122,18 +119,16 @@ namespace Moviedb.Controllers
                 foreach (var actor in actorsToAdd)
                 {
                     if (!movieDb.Actors.Contains(actor))
-                    {
                         movieDb.Actors.Add(actor);
-                    }
+                    
                 }
 
                 var actors = movieDb.Actors.ToArray();
                 foreach (var actor in actors)
                 {
                     if (!actorsToAdd.Contains(actor))
-                    {
                         movieDb.Actors.Remove(actor);
-                    }
+                    
                 }
 
                 movieDb.Name = movie.Name;
@@ -153,15 +148,12 @@ namespace Moviedb.Controllers
         public ActionResult Delete(int? id)
         {
             if (id == null)
-            {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+            
             Movie movie = movieRepository.GetMovie(id);
-            if (movie == null)
-            {
-                return HttpNotFound();
-            }
-            return View(movie);
+
+            return (movie == null) ? (ActionResult) HttpNotFound() : View(movie);
+            
         }
 
         [HttpPost]
@@ -210,9 +202,8 @@ namespace Moviedb.Controllers
         protected override void Dispose(bool disposing)
         {
             if (disposing)
-            {
                 movieRepository.Dispose();
-            }
+            
             base.Dispose(disposing);
         }
     }

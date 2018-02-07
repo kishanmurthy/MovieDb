@@ -25,9 +25,8 @@ namespace Moviedb.Controllers
         public ActionResult Details(int? id)
         {
             if (id == null)
-            {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+            
             Actor actor = movieRepository.GetActor(id);
 
             return actor == null ? (ActionResult)HttpNotFound() : (ActionResult)View(actor);
@@ -81,9 +80,8 @@ namespace Moviedb.Controllers
         public ActionResult Edit(int? id)
         {
             if (id == null)
-            {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+            
 
 
             Actor actor = movieRepository.GetActor(id);
@@ -118,9 +116,8 @@ namespace Moviedb.Controllers
         protected override void Dispose(bool disposing)
         {
             if (disposing)
-            {
                 movieRepository.Dispose();
-            }
+            
             base.Dispose(disposing);
         }
     }
