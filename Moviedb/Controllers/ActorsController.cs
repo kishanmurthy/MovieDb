@@ -85,12 +85,10 @@ namespace Moviedb.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
+
             Actor actor = movieRepository.GetActor(id);
-            if (actor == null)
-            {
-                return HttpNotFound();
-            }
-            return View(actor);
+            return actor == null ? (ActionResult)HttpNotFound() : (ActionResult)View(actor);
+ 
         }
 
         // POST: Actors/Edit/5
