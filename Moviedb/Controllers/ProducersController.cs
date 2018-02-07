@@ -114,27 +114,9 @@ namespace Moviedb.Controllers
             }
             return View(producer);
         }
-
-        // GET: Producers/Delete/5
-        public ActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-
-            Producer producer = movieRepository.GetProducer(id);
-            if (producer == null)
-            {
-                return HttpNotFound();
-            }
-            return View(producer);
-        }
-
-        // POST: Producers/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+ 
+       
+        public ActionResult Delete(int id)
         {
             Producer producer = movieRepository.GetProducer(id);
             if (producer != null)
