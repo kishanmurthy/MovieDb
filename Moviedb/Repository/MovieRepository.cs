@@ -10,7 +10,7 @@ using RefactorThis.GraphDiff;
 
 namespace Moviedb.Repository
 {
-    public class MovieRepository : IDisposable
+    public class MovieRepository : IMovieDb,IDisposable
     {
 
         private readonly MovieDbContext _movieDbContext;
@@ -49,14 +49,14 @@ namespace Moviedb.Repository
         
 
 
-        public IEnumerable<Movie> GetMovies()
+        public Movie[] GetMovies()
         {
-            return _movieDbContext.Movies.Include(m => m.Producer).Include(m => m.Actors).ToList();
+            return _movieDbContext.Movies.Include(m => m.Producer).Include(m => m.Actors).ToArray();
         }
 
-        public IEnumerable<Producer> GetProducers()
+        public Producer[] GetProducers()
         {
-            return _movieDbContext.Producers.ToList();
+            return _movieDbContext.Producers.ToArray();
         }
 
         public void AddMovie(Movie movie)

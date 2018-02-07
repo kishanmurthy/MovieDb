@@ -39,13 +39,6 @@ namespace Moviedb.Controllers
         }
 
 
-        public ActionResult CreateProducer()
-        {
-
-            return View();
-        }
-
-
 
         [HttpPost]
         public ActionResult CreateProducer([Bind(Include = "Id,Name,Gender,DOB,Bio")]Producer producer)
