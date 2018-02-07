@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Web;
 using Moviedb.Interfaces;
 using Moviedb.Models;
+using RefactorThis.GraphDiff;
 
 namespace Moviedb.Repository
 {
@@ -32,10 +34,20 @@ namespace Moviedb.Repository
             return _movieDbContext.Producers.Find(id);
         }
 
-        public IEnumerable<Actor> GetActors()
-        {
-            return _movieDbContext.Actors;
+        public Actor[] GetActors()
+        {   
+            return _movieDbContext.Actors.ToArray();
         }
+
+        public Actor[] GetActors(int[] ids)
+        {
+            var q = _movieDbContext.Actors.Where(e => ids.Contains(e.Id));
+            var query = q.ToString();
+            return q.ToArray();
+        }
+
+        
+
 
         public IEnumerable<Movie> GetMovies()
         {
@@ -66,6 +78,15 @@ namespace Moviedb.Repository
         {
             _movieDbContext.Entry(actor).State = EntityState.Modified;
         }
+        public void UpdateMovie(Movie movie)
+        {
+            //_movieDbContext.Movies.Attach(movie);
+            _movieDbContext.Entry(movie).State = EntityState.Modified;
+            _movieDbContext.UpdateGraph(movie, map => map.AssociatedCollection(p => p.Actors));
+            _movieDbContext.Configuration.AutoDetectChangesEnabled = true;
+
+        }
+
 
         public void UpdateProducer(Producer producer)
         {

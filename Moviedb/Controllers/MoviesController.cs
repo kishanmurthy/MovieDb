@@ -52,7 +52,8 @@ namespace Moviedb.Controllers
         // POST: Movies/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Name,ReleaseDate,Plot,ProducerId")] Movie movie)
+        public ActionResult Create([Bind(Include = "Id,Name,ReleaseDate,Plot,ProducerId")] Movie movie, string Actors)
+
         {
             ModelState.Remove("Id");
             if (ModelState.IsValid)
@@ -61,9 +62,12 @@ namespace Moviedb.Controllers
                 {
                     String[] actorIds = Request["Actors"].Split(',');
                     movie.MoviePosterPath = SaveFile(Request.Files[0]);
-
-                    for (int i = 0; i < actorIds.Length; i++)
-                        movie.Actors.Add(movieRepository.GetActor(int.Parse(actorIds[i])));
+                    var actors = movieRepository.GetActors();
+                    var actorsToAdd = movieRepository.GetActors(actorIds.Select(e => Convert.ToInt32(e)).ToArray());
+                    foreach (var actor in actorsToAdd)
+                    {
+                        movie.Actors.Add(actor);
+                    }
 
                     movieRepository.AddMovie(movie);
                     movieRepository.SaveChanges();
@@ -71,10 +75,7 @@ namespace Moviedb.Controllers
                 }
                 catch (Exception)
                 {
-                    ViewBag.ProducerId = new SelectList(movieRepository.GetProducers(), "Id", "Name");
-                    ViewBag.Actors = movieRepository.GetActors();
-
-                    return Create();
+                    return Content("Error Occured");
                 }
             }
 
@@ -112,10 +113,10 @@ namespace Moviedb.Controllers
         {
             if (ModelState.IsValid)
             {
-                String[] str;
+                String[] actorIds;
                 try
                 {
-                    str = Request["Actors"].Split(',');
+                    actorIds = Request["Actors"].Split(',');
                 }
                 catch (Exception)
                 {
@@ -123,15 +124,22 @@ namespace Moviedb.Controllers
                 }
 
                 var movieDb = movieRepository.GetMovie(movie.Id);
-                for (int i = 0; i < str.Length; i++)
+                var actorsToAdd = movieRepository.GetActors(actorIds.Select(e => Convert.ToInt32(e)).ToArray());
+
+                foreach (var actor in actorsToAdd)
                 {
-                    try
+                    if (!movieDb.Actors.Contains(actor))
                     {
-                        movieDb.Actors.Add(movieRepository.GetActor(int.Parse(str[i])));
+                        movieDb.Actors.Add(actor);
                     }
-                    catch (Exception e)
+                }
+
+                var actors = movieDb.Actors.ToArray();
+                foreach (var actor in actors)
+                {
+                    if (!actorsToAdd.Contains(actor))
                     {
-                        Console.WriteLine(@"Exception {0}", e);
+                        movieDb.Actors.Remove(actor);
                     }
                 }
 
@@ -139,7 +147,6 @@ namespace Moviedb.Controllers
                 movieDb.Plot = movie.Plot;
                 movieDb.ReleaseDate = movie.ReleaseDate;
                 movieDb.ProducerId = movie.ProducerId;
-                //movieDb.Actors = movie.Actors;
 
                 movieRepository.SaveChanges();
                 return RedirectToAction("Index");
