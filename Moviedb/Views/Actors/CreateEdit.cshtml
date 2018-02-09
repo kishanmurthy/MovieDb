@@ -1,0 +1,33 @@
+﻿@model Moviedb.Models.Actor
+
+@{
+
+    if (Model == null)
+    {
+        ViewBag.Title = "Create";
+        <h2>Create</h2>
+    }
+    else
+    {
+        ViewBag.Title = "Edit";
+        <h2>Edit</h2>
+    }
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+@Html.Partial("CreateActor", Model)
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        document.getElementById("submitActor").type = "submit";
+        ActorForm = document.getElementById("ActorForm");
+        ActorForm.action = "/actors/create"
+        ActorForm.method = "POST";
+    </script>
+}

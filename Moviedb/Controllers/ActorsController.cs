@@ -35,15 +35,9 @@ namespace Moviedb.Controllers
         // GET: Actors/Create
         public ActionResult Create()
         {
-            var actor = new Actor();
-            return View(actor);
+            return View("CreateEdit");
         }
 
-        public ActionResult CreateActor()
-        {
-            var actor = new Actor();
-            return View(actor);
-        }
 
         [HttpPost]
         public ActionResult CreateActor([Bind(Include = "Id,Name,Gender,DOB,Bio")] Actor actor)
@@ -85,7 +79,7 @@ namespace Moviedb.Controllers
 
 
             Actor actor = movieRepository.GetActor(id);
-            return actor == null ? (ActionResult)HttpNotFound() : (ActionResult)View(actor);
+            return actor == null ? (ActionResult)HttpNotFound() : (ActionResult)View("CreateEdit",actor);
  
         }
 

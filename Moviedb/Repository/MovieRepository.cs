@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.Entity;
-using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Web;
 using Moviedb.Interfaces;
@@ -45,9 +43,6 @@ namespace Moviedb.Repository
             var query = q.ToString();
             return q.ToArray();
         }
-
-        
-
 
         public Movie[] GetMovies()
         {

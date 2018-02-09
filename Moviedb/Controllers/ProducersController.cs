@@ -35,7 +35,7 @@ namespace Moviedb.Controllers
         // GET: Producers/Create
         public ActionResult Create()
         {
-            return View();
+            return View("CreateEdit");
         }
 
 
@@ -77,14 +77,9 @@ namespace Moviedb.Controllers
         {
             if (id == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            
-
             Producer producer = movieRepository.GetProducer(id);
-            if (producer == null)
-            {
-                return HttpNotFound();
-            }
-            return View(producer);
+            return (producer == null) ? (ActionResult)HttpNotFound() : View("CreateEdit",producer);
+           
         }
 
         // POST: Producers/Edit/5

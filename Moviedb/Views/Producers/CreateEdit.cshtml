@@ -1,0 +1,34 @@
+﻿@model Moviedb.Models.Producer
+
+@{
+
+
+    if (Model == null)
+    {
+        ViewBag.Title = "Create";
+        <h2>Create</h2>
+    }
+    else
+    {
+        ViewBag.Title = "Edit";
+        <h2>Edit</h2>
+    }
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@Html.Partial("CreateProducer", Model)
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        document.getElementById("submitProducer").type = "submit";
+        ProducerForm = document.getElementById("ProducerForm");
+        ProducerForm.action = "/producers/create"
+        ProducerForm.method = "POST";
+    </script>
+
+}

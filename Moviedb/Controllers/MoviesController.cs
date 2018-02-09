@@ -10,7 +10,6 @@ namespace Moviedb.Controllers
 {
     public class MoviesController : Controller
     {
-        // ReSharper disable once InconsistentNaming
         private readonly MovieRepository movieRepository;
 
         public MoviesController()
@@ -172,6 +171,7 @@ namespace Moviedb.Controllers
 
             return Json(movie);
         }
+
 
         // POST: Movies/Delete/5
         [HttpPost, ActionName("Delete")]

@@ -4,7 +4,6 @@
     Layout = null;
 }
 
-<h2>Create</h2>
 
 <form id="ActorForm">
 
@@ -33,7 +32,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Dob, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Dob, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.TextBoxFor(model => model.Dob, "{0: dd-MM-yyyy}", new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.Dob, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -48,7 +47,7 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="button" value="Create" class="btn btn-default" onclick="SubmitActor()" />
+                <input type="button" value="Create"  id="submitActor" class="btn btn-default" onclick="SubmitActor() " />
             </div>
         </div>
     </div>
