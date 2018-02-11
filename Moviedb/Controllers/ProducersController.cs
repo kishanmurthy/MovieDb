@@ -8,17 +8,17 @@ namespace Moviedb.Controllers
     {
         
 
-        private MovieRepository movieRepository;
+        private readonly ProducerRepository _producerRepository;
 
         public ProducersController()
         {
-            movieRepository = new MovieRepository();
+            _producerRepository = new ProducerRepository();
 
         }
         // GET: Producers
         public ActionResult Index()
         {
-            return View(movieRepository.GetProducers());
+            return View(_producerRepository.GetProducers());
         }
 
         // GET: Producers/Details/5
@@ -27,7 +27,7 @@ namespace Moviedb.Controllers
             if (id == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             
-            Producer producer = movieRepository.GetProducer(id);
+            Producer producer = _producerRepository.GetProducer(id);
             return (producer == null) ? (ActionResult) HttpNotFound() : View(producer);
             
         }
@@ -45,8 +45,8 @@ namespace Moviedb.Controllers
         {
             if (ModelState.IsValid)
             {
-                movieRepository.AddProducer(producer);
-                movieRepository.SaveChanges();
+                _producerRepository.AddProducer(producer);
+                _producerRepository.SaveChanges();
 
                 
                 return Json(producer);
@@ -64,12 +64,12 @@ namespace Moviedb.Controllers
         {
             if (ModelState.IsValid)
             {
-                movieRepository.AddProducer(producer);
-                movieRepository.SaveChanges();
+                _producerRepository.AddProducer(producer);
+                _producerRepository.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            return View(producer);
+            return View("CreateEdit",producer);
         }
 
         // GET: Producers/Edit/5
@@ -77,7 +77,7 @@ namespace Moviedb.Controllers
         {
             if (id == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            Producer producer = movieRepository.GetProducer(id);
+            Producer producer = _producerRepository.GetProducer(id);
             return (producer == null) ? (ActionResult)HttpNotFound() : View("CreateEdit",producer);
            
         }
@@ -91,27 +91,27 @@ namespace Moviedb.Controllers
         {
             if (ModelState.IsValid)
             {
-                movieRepository.UpdateProducer(producer);
-                movieRepository.SaveChanges();
+                _producerRepository.UpdateProducer(producer);
+                _producerRepository.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return View(producer);
+            return View("CreateEdit",producer);
         }
  
        
         public ActionResult Delete(int id)
         {
-            Producer producer = movieRepository.GetProducer(id);
+            Producer producer = _producerRepository.GetProducer(id);
             if (producer != null)
-                movieRepository.RemoveProducer(producer);
-            movieRepository.SaveChanges();
+                _producerRepository.RemoveProducer(producer);
+            _producerRepository.SaveChanges();
             return RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing)
         {
             if (disposing)
-                movieRepository.Dispose();
+                _producerRepository.Dispose();
             
             base.Dispose(disposing);
         }

@@ -1,26 +1,26 @@
 ﻿using Moviedb.Models;
-using Moviedb.Repository;
 using System;
 using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using Moviedb.DAL;
 
 namespace Moviedb.Controllers
 {
     public class MoviesController : Controller
     {
-        private readonly MovieRepository movieRepository;
+        private readonly UnitOfWork _unitOfWork;
 
         public MoviesController()
         {
-            movieRepository = new MovieRepository();
+            _unitOfWork = new UnitOfWork();
         }
 
         // GET: Movies
         public ActionResult Index()
         {
-            return View(movieRepository.GetMovies());
+            return View(_unitOfWork.MovieRepository.GetMovies());
         }
 
         // GET: Movies/Details/5
@@ -29,22 +29,22 @@ namespace Moviedb.Controllers
             if (id == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
-            Movie movie = movieRepository.GetMovie(id);
+            Movie movie = _unitOfWork.MovieRepository.GetMovie(id);
             return movie == null ? (ActionResult)HttpNotFound() : View(movie);
         }
 
         // GET: Movies/Create
         public ActionResult Create()
         {
-            ViewBag.ProducerId = new SelectList(movieRepository.GetProducers(), "Id", "Name");
-            ViewBag.Actors = movieRepository.GetActors();
-            return View("Form");
+            ViewBag.ProducerId = new SelectList(_unitOfWork.ProducerRepository.GetProducers(), "Id", "Name");
+            ViewBag.Actors = _unitOfWork.ActorRepository.GetActors();
+            return View("CreateEdit");
         }
 
         // POST: Movies/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Name,ReleaseDate,Plot,ProducerId")] Movie movie, string Actors)
+        public ActionResult Create([Bind(Include = "Id,Name,ReleaseDate,Plot,ProducerId")] Movie movie)
 
         {
             ModelState.Remove("Id");
@@ -54,15 +54,17 @@ namespace Moviedb.Controllers
                 {
                     String[] actorIds = Request["Actors"].Split(',');
                     movie.MoviePosterPath = SaveFile(Request.Files[0]);
-                    var actors = movieRepository.GetActors();
-                    var actorsToAdd = movieRepository.GetActors(actorIds.Select(e => Convert.ToInt32(e)).ToArray());
+                    var actorsToAdd = _unitOfWork.ActorRepository.GetActors(actorIds.Select(e => Convert.ToInt32(e)).ToArray());
                     foreach (var actor in actorsToAdd)
                     {
                         movie.Actors.Add(actor);
                     }
 
-                    movieRepository.AddMovie(movie);
-                    movieRepository.SaveChanges();
+                    _unitOfWork.MovieRepository.AddMovie(movie);
+
+                    
+                    _unitOfWork.Save();
+                    
                     return RedirectToAction("Index");
                 }
                 catch (Exception)
@@ -71,9 +73,9 @@ namespace Moviedb.Controllers
                 }
             }
 
-            ViewBag.ProducerId = new SelectList(movieRepository.GetProducers(), "Id", "Name", movie.ProducerId);
-            ViewBag.Actors = movieRepository.GetActors();
-            return View("Form");
+            ViewBag.ProducerId = new SelectList(_unitOfWork.ProducerRepository.GetProducers(), "Id", "Name", movie.ProducerId);
+            ViewBag.Actors = _unitOfWork.ActorRepository.GetActors();
+            return View("CreateEdit");
         }
 
         // GET: Movies/Edit/5
@@ -82,15 +84,15 @@ namespace Moviedb.Controllers
             if (id == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             
-            Movie movie = movieRepository.GetMovie(id);
+            Movie movie = _unitOfWork.MovieRepository.GetMovie(id);
             if (movie == null)
                 return HttpNotFound();
 
-            ViewBag.ProducerId = new SelectList(movieRepository.GetProducers(), "Id", "Name", movie.ProducerId);
+            ViewBag.ProducerId = new SelectList(_unitOfWork.ProducerRepository.GetProducers(), "Id", "Name", movie.ProducerId);
             ViewBag.NewProducer = new Producer();
             ViewBag.NewActor = new Actor();
-            ViewBag.Actors = movieRepository.GetActors();
-            return View("Form", movie);
+            ViewBag.Actors = _unitOfWork.ActorRepository.GetActors();
+            return View("CreateEdit", movie);
         }
 
         // POST: Movies/Edit/5
@@ -112,8 +114,8 @@ namespace Moviedb.Controllers
                     return Edit(movie.Id);
                 }
 
-                var movieDb = movieRepository.GetMovie(movie.Id);
-                var actorsToAdd = movieRepository.GetActors(actorIds.Select(e => Convert.ToInt32(e)).ToArray());
+                var movieDb = _unitOfWork.MovieRepository.GetMovie(movie.Id);
+                var actorsToAdd = _unitOfWork.ActorRepository.GetActors(actorIds.Select(e => Convert.ToInt32(e)).ToArray());
 
                 foreach (var actor in actorsToAdd)
                 {
@@ -135,12 +137,12 @@ namespace Moviedb.Controllers
                 movieDb.ReleaseDate = movie.ReleaseDate;
                 movieDb.ProducerId = movie.ProducerId;
 
-                movieRepository.SaveChanges();
+                _unitOfWork.Save();
                 return RedirectToAction("Index");
             }
-            ViewBag.ProducerId = new SelectList(movieRepository.GetProducers(), "Id", "Name", movie.ProducerId);
+            ViewBag.ProducerId = new SelectList(_unitOfWork.ProducerRepository.GetProducers(), "Id", "Name", movie.ProducerId);
 
-            return View("Form", movie);
+            return View("CreateEdit", movie);
         }
 
         // GET: Movies/Delete/5
@@ -149,7 +151,7 @@ namespace Moviedb.Controllers
             if (id == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             
-            Movie movie = movieRepository.GetMovie(id);
+            Movie movie = _unitOfWork.MovieRepository.GetMovie(id);
 
             return (movie == null) ? (ActionResult) HttpNotFound() : View(movie);
             
@@ -158,9 +160,9 @@ namespace Moviedb.Controllers
         [HttpPost]
         public ActionResult DeleteAjax(int id)
         {
-            Movie movie = movieRepository.GetMovie(id);
-            movieRepository.RemoveMovie(movie);
-            movieRepository.SaveChanges();
+            Movie movie = _unitOfWork.MovieRepository.GetMovie(id);
+            _unitOfWork.MovieRepository.RemoveMovie(movie);
+            _unitOfWork.MovieRepository.SaveChanges();
 
             if (movie.MoviePosterPath != null)
             {
@@ -178,9 +180,9 @@ namespace Moviedb.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Movie movie = movieRepository.GetMovie(id);
-            movieRepository.RemoveMovie(movie ?? throw new InvalidOperationException());
-            movieRepository.SaveChanges();
+            Movie movie = _unitOfWork.MovieRepository.GetMovie(id);
+            _unitOfWork.MovieRepository.RemoveMovie(movie ?? throw new InvalidOperationException());
+            _unitOfWork.MovieRepository.SaveChanges();
             return RedirectToAction("Index");
         }
 
@@ -202,7 +204,7 @@ namespace Moviedb.Controllers
         protected override void Dispose(bool disposing)
         {
             if (disposing)
-                movieRepository.Dispose();
+                _unitOfWork.MovieRepository.Dispose();
             
             base.Dispose(disposing);
         }

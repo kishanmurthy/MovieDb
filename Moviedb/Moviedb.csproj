@@ -154,12 +154,15 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\ActorsController.cs" />
-    <Compile Include="Interfaces\IMovieDb.cs" />
+    <Compile Include="DAL\UnitOfWork.cs" />
+    <Compile Include="Interfaces\IActor.cs" />
+    <Compile Include="Interfaces\IMovie.cs" />
     <Compile Include="Controllers\MoviesController.cs" />
     <Compile Include="Controllers\ProducersController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Interfaces\IProducer.cs" />
     <Compile Include="Migrations\201801291055368_AddedModels.cs" />
     <Compile Include="Migrations\201801291055368_AddedModels.Designer.cs">
       <DependentUpon>201801291055368_AddedModels.cs</DependentUpon>
@@ -182,8 +185,9 @@
     <Compile Include="Models\MovieDbContext.cs" />
     <Compile Include="Models\Producer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repository\ActorRepository.cs" />
     <Compile Include="Repository\MovieRepository.cs" />
-    <Compile Include="ViewModel\MoviesActorViewModel.cs" />
+    <Compile Include="Repository\ProducerRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-litera.css" />
@@ -243,9 +247,9 @@
     <Content Include="Views\Actors\Delete.cshtml" />
     <Content Include="Views\Actors\Details.cshtml" />
     <Content Include="Views\Actors\Index.cshtml" />
-    <Content Include="Views\Shared\CreateActor.cshtml" />
-    <Content Include="Views\Shared\CreateProducer.cshtml" />
-    <Content Include="Views\Movies\Form.cshtml" />
+    <Content Include="Views\Shared\_CreateActor.cshtml" />
+    <Content Include="Views\Shared\_CreateProducer.cshtml" />
+    <Content Include="Views\Movies\CreateEdit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

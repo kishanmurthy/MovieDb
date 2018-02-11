@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Web;
 
 namespace Moviedb.Models
 {
-    public sealed class Actor
+    public class Actor
     {
         public Actor()
         {
-            Movies = new HashSet<Movie>();
+            this.Movies = new HashSet<Movie>();
         }
 
 
@@ -20,12 +22,12 @@ namespace Moviedb.Models
         public Gender Gender { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}")]
-        public DateTime ? Dob { get; set; }
+        public DateTime? Dob { get; set; }
 
-        [Display(Name="Biography")]
+        [Display(Name = "Biography")]
         public string Bio { get; set; }
 
-        public ICollection<Movie> Movies { get; set; }
+        public virtual ICollection<Movie> Movies { get; set; }
     }
 
     public enum Gender

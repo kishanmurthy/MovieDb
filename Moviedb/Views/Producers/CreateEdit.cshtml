@@ -16,7 +16,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@Html.Partial("CreateProducer", Model)
+@Html.Partial("_CreateProducer", Model)
 
 <div>
     @Html.ActionLink("Back to List", "Index")
@@ -27,7 +27,7 @@
     <script>
         document.getElementById("submitProducer").type = "submit";
         ProducerForm = document.getElementById("ProducerForm");
-        ProducerForm.action = "/producers/create"
+        ProducerForm.action = "/producers/create";
         ProducerForm.method = "POST";
     </script>
 

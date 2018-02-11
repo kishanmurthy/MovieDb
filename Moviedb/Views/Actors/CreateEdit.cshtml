@@ -16,7 +16,7 @@
 
 }
 
-@Html.Partial("CreateActor", Model)
+@Html.Partial("_CreateActor", Model)
 
 <div>
     @Html.ActionLink("Back to List", "Index")
@@ -27,7 +27,7 @@
     <script>
         document.getElementById("submitActor").type = "submit";
         ActorForm = document.getElementById("ActorForm");
-        ActorForm.action = "/actors/create"
+        ActorForm.action = "/actors/create";
         ActorForm.method = "POST";
     </script>
 }

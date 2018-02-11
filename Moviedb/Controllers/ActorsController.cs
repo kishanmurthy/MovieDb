@@ -8,17 +8,18 @@ namespace Moviedb.Controllers
     public class ActorsController : Controller
     {
 
-        private readonly MovieRepository movieRepository;
+        
+        private readonly ActorRepository _actorRepository;
 
         public ActorsController()
         {
-            movieRepository = new MovieRepository();
+            _actorRepository = new ActorRepository();
         }
         
         // GET: Actors
         public ActionResult Index()
         {
-            return View(movieRepository.GetActors());
+            return View(_actorRepository.GetActors());
         }
 
         // GET: Actors/Details/5
@@ -27,9 +28,9 @@ namespace Moviedb.Controllers
             if (id == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             
-            Actor actor = movieRepository.GetActor(id);
+            Actor actor = _actorRepository.GetActor(id);
 
-            return actor == null ? (ActionResult)HttpNotFound() : (ActionResult)View(actor);
+            return actor == null ? HttpNotFound() : (ActionResult)View(actor);
         }
 
         // GET: Actors/Create
@@ -44,8 +45,8 @@ namespace Moviedb.Controllers
         {
             if (ModelState.IsValid)
             {
-                movieRepository.AddActor(actor);
-                movieRepository.SaveChanges();   
+                _actorRepository.AddActor(actor);
+                _actorRepository.SaveChanges();   
 
                 return Json(actor);
             }
@@ -62,12 +63,12 @@ namespace Moviedb.Controllers
         {
             if (ModelState.IsValid)
             {
-                movieRepository.AddActor(actor);
-                movieRepository.SaveChanges();
+                _actorRepository.AddActor(actor);
+                _actorRepository.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            return View(actor);
+            return View("CreateEdit",actor);
         }
 
         // GET: Actors/Edit/5
@@ -78,8 +79,8 @@ namespace Moviedb.Controllers
             
 
 
-            Actor actor = movieRepository.GetActor(id);
-            return actor == null ? (ActionResult)HttpNotFound() : (ActionResult)View("CreateEdit",actor);
+            Actor actor = _actorRepository.GetActor(id);
+            return actor == null ? HttpNotFound() : (ActionResult)View("CreateEdit",actor);
  
         }
 
@@ -92,25 +93,25 @@ namespace Moviedb.Controllers
         {
             if (ModelState.IsValid)
             {
-                movieRepository.UpdateActor(actor);
-                movieRepository.SaveChanges();
+                _actorRepository.UpdateActor(actor);
+                _actorRepository.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return View(actor);
+            return View("CreateEdit",actor);
         }
         
         public ActionResult Delete(int id)
         {
-            Actor actor = movieRepository.GetActor(id);
-            movieRepository.RemoveActor(actor);
-            movieRepository.SaveChanges();
+            Actor actor = _actorRepository.GetActor(id);
+            _actorRepository.RemoveActor(actor);
+            _actorRepository.SaveChanges();
             return RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing)
         {
             if (disposing)
-                movieRepository.Dispose();
+                _actorRepository.Dispose();
             
             base.Dispose(disposing);
         }
