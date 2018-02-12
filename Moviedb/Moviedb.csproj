@@ -154,7 +154,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\ActorsController.cs" />
-    <Compile Include="DAL\UnitOfWork.cs" />
+    <Compile Include="DAL\MovieDal.cs" />
     <Compile Include="Helper\MovieHelper.cs" />
     <Compile Include="Interfaces\IActor.cs" />
     <Compile Include="Interfaces\IMovie.cs" />

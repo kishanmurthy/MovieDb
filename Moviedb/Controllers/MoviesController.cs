@@ -11,17 +11,17 @@ namespace Moviedb.Controllers
 {
     public class MoviesController : Controller
     {
-        private readonly UnitOfWork _unitOfWork;
+        private readonly MovieDal _movieDal;
 
         public MoviesController()
         {
-            _unitOfWork = new UnitOfWork();
+            _movieDal = new MovieDal();
         }
 
         // GET: Movies
         public ActionResult Index()
         {
-            return View(_unitOfWork.MovieRepository.GetMovies());
+            return View(_movieDal.MovieRepository.GetMovies());
         }
 
         // GET: Movies/Details/5
@@ -30,15 +30,15 @@ namespace Moviedb.Controllers
             if (id == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
-            Movie movie = _unitOfWork.MovieRepository.GetMovie(id);
+            Movie movie = _movieDal.MovieRepository.GetMovie(id);
             return movie == null ? (ActionResult)HttpNotFound() : View(movie);
         }
 
         // GET: Movies/Create
         public ActionResult Create()
         {
-            ViewBag.ProducerId = new SelectList(_unitOfWork.ProducerRepository.GetProducers(), "Id", "Name");
-            ViewBag.Actors = _unitOfWork.ActorRepository.GetActors();
+            ViewBag.ProducerId = new SelectList(_movieDal.ProducerRepository.GetProducers(), "Id", "Name");
+            ViewBag.Actors = _movieDal.ActorRepository.GetActors();
             return View("Create");
         }
 
@@ -55,15 +55,15 @@ namespace Moviedb.Controllers
                 {
                     String[] actorIds = Request["Actors"].Split(',');
                     movie.MoviePosterPath = SaveFile(Request.Files[0]);
-                    var actorsToAdd = _unitOfWork.ActorRepository.GetActors(actorIds.Select(e => Convert.ToInt32(e)).ToArray());
+                    var actorsToAdd = _movieDal.ActorRepository.GetActors(actorIds.Select(e => Convert.ToInt32(e)).ToArray());
                     foreach (var actor in actorsToAdd)
                     {
                         movie.Actors.Add(actor);
                     }
 
-                    _unitOfWork.MovieRepository.AddMovie(movie);
+                    _movieDal.MovieRepository.AddMovie(movie);
 
-                    _unitOfWork.Save();
+                    _movieDal.Save();
 
                     return RedirectToAction("Index");
                 }
@@ -73,8 +73,8 @@ namespace Moviedb.Controllers
                 }
             }
 
-            ViewBag.ProducerId = new SelectList(_unitOfWork.ProducerRepository.GetProducers(), "Id", "Name", movie.ProducerId);
-            ViewBag.Actors = _unitOfWork.ActorRepository.GetActors();
+            ViewBag.ProducerId = new SelectList(_movieDal.ProducerRepository.GetProducers(), "Id", "Name", movie.ProducerId);
+            ViewBag.Actors = _movieDal.ActorRepository.GetActors();
             return View("Create");
         }
 
@@ -84,14 +84,14 @@ namespace Moviedb.Controllers
             if (id == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
-            Movie movie = _unitOfWork.MovieRepository.GetMovie(id);
+            Movie movie = _movieDal.MovieRepository.GetMovie(id);
             if (movie == null)
                 return HttpNotFound();
 
-            ViewBag.ProducerId = new SelectList(_unitOfWork.ProducerRepository.GetProducers(), "Id", "Name", movie.ProducerId);
+            ViewBag.ProducerId = new SelectList(_movieDal.ProducerRepository.GetProducers(), "Id", "Name", movie.ProducerId);
             ViewBag.NewProducer = new Producer();
             ViewBag.NewActor = new Actor();
-            ViewBag.Actors = _unitOfWork.ActorRepository.GetActors();
+            ViewBag.Actors = _movieDal.ActorRepository.GetActors();
             return View("Create", movie);
         }
 
@@ -114,8 +114,8 @@ namespace Moviedb.Controllers
                     return Edit(movie.Id);
                 }
 
-                var movieDb = _unitOfWork.MovieRepository.GetMovie(movie.Id);
-                var actorsToAdd = _unitOfWork.ActorRepository.GetActors(actorIds.Select(e => Convert.ToInt32(e)).ToArray());
+                var movieDb = _movieDal.MovieRepository.GetMovie(movie.Id);
+                var actorsToAdd = _movieDal.ActorRepository.GetActors(actorIds.Select(e => Convert.ToInt32(e)).ToArray());
 
                 foreach (var actor in actorsToAdd)
                 {
@@ -135,10 +135,10 @@ namespace Moviedb.Controllers
                 movieDb.ReleaseDate = movie.ReleaseDate;
                 movieDb.ProducerId = movie.ProducerId;
 
-                _unitOfWork.Save();
+                _movieDal.Save();
                 return RedirectToAction("Index");
             }
-            ViewBag.ProducerId = new SelectList(_unitOfWork.ProducerRepository.GetProducers(), "Id", "Name", movie.ProducerId);
+            ViewBag.ProducerId = new SelectList(_movieDal.ProducerRepository.GetProducers(), "Id", "Name", movie.ProducerId);
 
             return View("Create", movie);
         }
@@ -149,7 +149,7 @@ namespace Moviedb.Controllers
             if (id == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
-            Movie movie = _unitOfWork.MovieRepository.GetMovie(id);
+            Movie movie = _movieDal.MovieRepository.GetMovie(id);
 
             return (movie == null) ? (ActionResult)HttpNotFound() : View(movie);
         }
@@ -157,9 +157,9 @@ namespace Moviedb.Controllers
         [HttpPost]
         public ActionResult DeleteAjax(int id)
         {
-            Movie movie = _unitOfWork.MovieRepository.GetMovie(id);
-            _unitOfWork.MovieRepository.RemoveMovie(movie);
-            _unitOfWork.MovieRepository.SaveChanges();
+            Movie movie = _movieDal.MovieRepository.GetMovie(id);
+            _movieDal.MovieRepository.RemoveMovie(movie);
+            _movieDal.MovieRepository.SaveChanges();
 
             if (movie.MoviePosterPath != null)
             {
@@ -176,9 +176,9 @@ namespace Moviedb.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Movie movie = _unitOfWork.MovieRepository.GetMovie(id);
-            _unitOfWork.MovieRepository.RemoveMovie(movie ?? throw new InvalidOperationException());
-            _unitOfWork.MovieRepository.SaveChanges();
+            Movie movie = _movieDal.MovieRepository.GetMovie(id);
+            _movieDal.MovieRepository.RemoveMovie(movie ?? throw new InvalidOperationException());
+            _movieDal.MovieRepository.SaveChanges();
             return RedirectToAction("Index");
         }
 
@@ -200,7 +200,7 @@ namespace Moviedb.Controllers
         protected override void Dispose(bool disposing)
         {
             if (disposing)
-                _unitOfWork.MovieRepository.Dispose();
+                _movieDal.MovieRepository.Dispose();
 
             base.Dispose(disposing);
         }

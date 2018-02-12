@@ -3,11 +3,11 @@ using Moviedb.Models;
 using Moviedb.Repository;
 namespace Moviedb.DAL
 {
-    public class UnitOfWork : IDisposable
+    public class MovieDal : IDisposable
     {
         private readonly MovieDbContext _movieDbContext;
 
-        public UnitOfWork()
+        public MovieDal()
         {
             _movieDbContext = new MovieDbContext();
         }
