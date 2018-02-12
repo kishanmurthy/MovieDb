@@ -5,7 +5,7 @@
 
 @model Moviedb.Models.Producer
 
-    <form id="ProducerForm">
+    <form id="producer-form">
         @Html.AntiForgeryToken()
 
         <div class="form-horizontal">
@@ -46,7 +46,7 @@
 
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
-                    <input type="button" value="Create" id="submitProducer" class="btn btn-default" onclick="SubmitProducer()" />
+                    <input type="button" value="Create" id="submit-producer" class="btn btn-default" onclick="submitProducer()" />
                 </div>
             </div>
         </div>

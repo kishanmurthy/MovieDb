@@ -58,8 +58,8 @@
         <div class="form-group">
             @Html.LabelFor(model => model.ProducerId, "ProducerId", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownList("ProducerId", null, htmlAttributes: new { @class = "form-control", @id = "ProducersDropDown" })
-                <button type="button" class="btn btn-default" data-target="#MyModalProducer" data-toggle="modal">New Producer</button>
+                @Html.DropDownList("ProducerId", null, htmlAttributes: new { @class = "form-control", @id = "producers-drop-down" })
+                <button type="button" class="btn btn-default" data-target="#modal-producer" data-toggle="modal">New Producer</button>
                 @Html.ValidationMessageFor(model => model.ProducerId, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -68,8 +68,8 @@
             @Html.LabelFor(model => model.Actors, "Actors", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
 
-                @* ReSharper disable once UnknownCssClass *@
-                <select class="actor_dropdown" multiple="multiple" name="Actors">
+                
+                <select class="actor-dropdown" multiple="multiple" name="Actors">
 
                     @{
                         foreach (var actor in ViewBag.Actors)
@@ -89,7 +89,7 @@
                         }
                     }
                 </select>
-                <button type="button" class="btn btn-default" data-target="#MyModalActor" data-toggle="modal">New Actor</button>
+                <button type="button" class="btn btn-default" data-target="#modal-actor" data-toggle="modal">New Actor</button>
             </div>
         </div>
 
@@ -101,7 +101,7 @@
                 <div class="form-group">
                     @Html.LabelFor(model => model.MoviePosterPath, "Movie Poster", htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
-                        <input type="file" name="MoviePoster" id="MoviePoster" accept="image/*" />
+                        <input type="file" name="MoviePoster" id="movie-poster" accept="image/*" />
                     </div>
                 </div>
             }
@@ -118,12 +118,12 @@
     @Html.ActionLink("Back to List", "Index")
 </div>
 
-<div class="modal glyphicon-fast-forward" id="MyModalProducer" tabindex="-1">
+<div class="modal glyphicon-fast-forward" id="modal-producer" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button class="close" data-dismiss="modal" onclick="close()">&times;</button>
-                <div class="modal-body" id="ModalBodyProducer">
+                <div class="modal-body" id="modal-body-producer">
 
                     <h2>Create</h2>
                     @Html.Partial("_CreateProducer", (Object)ViewBag.NewProducer)
@@ -134,12 +134,12 @@
     </div>
 </div>
 
-<div class="modal glyphicon-fast-forward" id="MyModalActor" tabindex="-1">
+<div class="modal glyphicon-fast-forward" id="modal-actor" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button class="close" data-dismiss="modal" onclick="close()">&times;</button>
-                <div class="modal-body" id="ModalBodyActor">
+                <div class="modal-body" id="modal-body-actor">
                     
                     <h2>Create</h2>
                     @Html.Partial("_CreateActor", (Object)ViewBag.NewActor)
@@ -152,6 +152,6 @@
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
     <script type="text/javascript">
-        $('.actor_dropdown').chosen();
+        $('.actor-dropdown').chosen();
     </script>
 }

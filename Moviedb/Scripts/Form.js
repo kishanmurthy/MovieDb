@@ -1,12 +1,12 @@
-﻿function SubmitProducer() {
-        $('#MyModalProducer').modal('toggle');
+﻿function submitProducer() {
+        $('#modal-producer').modal('toggle');
 
     $.ajax({
         type: "POST",
             url: "/Producers/CreateProducer",
-            data: $("#ProducerForm").serialize(),
+            data: $("#producer-form").serialize(),
             success: function (response) {
-                var x = document.getElementById("ProducersDropDown");
+                var x = document.getElementById("producers-drop-down");
 
                 document.myResponse = response;
 
@@ -17,23 +17,23 @@
             }
         });
     }
-function SubmitActor() {
-        $('#MyModalActor').modal('toggle');
+function submitActor() {
+        $('#modal-actor').modal('toggle');
 
     $.ajax({
         type: "POST",
             url: "/Actors/CreateActor",
-            data: $("#ActorForm").serialize(),
+            data: $("#actor-form").serialize(),
             success: function (response) {
         console.log("Success submit actor");
     document.response = response;
-                var x = document.getElementsByClassName("actor_dropdown")[0];
+                var x = document.getElementsByClassName("actor-dropdown")[0];
                 var option = document.createElement("option");
                 option.text = response.Name;
                 option.value = response.Id;
                 x.add(option);
 
-                $('.actor_dropdown').trigger("chosen:updated");
+                $('.actor-dropdown').trigger("chosen:updated");
             }
 
         });
