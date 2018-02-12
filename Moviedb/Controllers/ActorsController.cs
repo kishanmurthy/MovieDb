@@ -36,7 +36,7 @@ namespace Moviedb.Controllers
         // GET: Actors/Create
         public ActionResult Create()
         {
-            return View("CreateEdit");
+            return View("Create");
         }
 
 
@@ -68,7 +68,7 @@ namespace Moviedb.Controllers
                 return RedirectToAction("Index");
             }
 
-            return View("CreateEdit",actor);
+            return View("Create",actor);
         }
 
         // GET: Actors/Edit/5
@@ -80,7 +80,7 @@ namespace Moviedb.Controllers
 
 
             Actor actor = _actorRepository.GetActor(id);
-            return actor == null ? HttpNotFound() : (ActionResult)View("CreateEdit",actor);
+            return actor == null ? HttpNotFound() : (ActionResult)View("Create",actor);
  
         }
 
@@ -97,7 +97,7 @@ namespace Moviedb.Controllers
                 _actorRepository.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return View("CreateEdit",actor);
+            return View("Create",actor);
         }
         
         public ActionResult Delete(int id)

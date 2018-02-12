@@ -39,7 +39,7 @@ namespace Moviedb.Controllers
         {
             ViewBag.ProducerId = new SelectList(_unitOfWork.ProducerRepository.GetProducers(), "Id", "Name");
             ViewBag.Actors = _unitOfWork.ActorRepository.GetActors();
-            return View("CreateEdit");
+            return View("Create");
         }
 
         // POST: Movies/Create
@@ -75,7 +75,7 @@ namespace Moviedb.Controllers
 
             ViewBag.ProducerId = new SelectList(_unitOfWork.ProducerRepository.GetProducers(), "Id", "Name", movie.ProducerId);
             ViewBag.Actors = _unitOfWork.ActorRepository.GetActors();
-            return View("CreateEdit");
+            return View("Create");
         }
 
         // GET: Movies/Edit/5
@@ -92,7 +92,7 @@ namespace Moviedb.Controllers
             ViewBag.NewProducer = new Producer();
             ViewBag.NewActor = new Actor();
             ViewBag.Actors = _unitOfWork.ActorRepository.GetActors();
-            return View("CreateEdit", movie);
+            return View("Create", movie);
         }
 
         // POST: Movies/Edit/5
@@ -140,7 +140,7 @@ namespace Moviedb.Controllers
             }
             ViewBag.ProducerId = new SelectList(_unitOfWork.ProducerRepository.GetProducers(), "Id", "Name", movie.ProducerId);
 
-            return View("CreateEdit", movie);
+            return View("Create", movie);
         }
 
         // GET: Movies/Delete/5
@@ -186,8 +186,6 @@ namespace Moviedb.Controllers
         {
             if (!String.IsNullOrEmpty(file.FileName))
             {
-                //var path = "D:\\Images\\MoviePosters\\";
-
                 var path = MovieHelper.MoviePosterFileSystemPath;
                 var myfileName = $"{DateTime.UtcNow:yyyyMMddHHmmssfff}_{file.FileName}";
                 var myFilePath = path + myfileName;

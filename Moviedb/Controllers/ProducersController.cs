@@ -35,7 +35,7 @@ namespace Moviedb.Controllers
         // GET: Producers/Create
         public ActionResult Create()
         {
-            return View("CreateEdit");
+            return View("Create");
         }
 
 
@@ -69,7 +69,7 @@ namespace Moviedb.Controllers
                 return RedirectToAction("Index");
             }
 
-            return View("CreateEdit",producer);
+            return View("Create",producer);
         }
 
         // GET: Producers/Edit/5
@@ -78,7 +78,7 @@ namespace Moviedb.Controllers
             if (id == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             Producer producer = _producerRepository.GetProducer(id);
-            return (producer == null) ? (ActionResult)HttpNotFound() : View("CreateEdit",producer);
+            return (producer == null) ? (ActionResult)HttpNotFound() : View("Create",producer);
            
         }
 
@@ -95,7 +95,7 @@ namespace Moviedb.Controllers
                 _producerRepository.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return View("CreateEdit",producer);
+            return View("Create",producer);
         }
  
        
