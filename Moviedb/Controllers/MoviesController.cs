@@ -1,10 +1,11 @@
-﻿using Moviedb.Models;
+﻿using Moviedb.DAL;
+using Moviedb.Helper;
+using Moviedb.Models;
 using System;
 using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
-using Moviedb.DAL;
 
 namespace Moviedb.Controllers
 {
@@ -62,9 +63,8 @@ namespace Moviedb.Controllers
 
                     _unitOfWork.MovieRepository.AddMovie(movie);
 
-                    
                     _unitOfWork.Save();
-                    
+
                     return RedirectToAction("Index");
                 }
                 catch (Exception)
@@ -83,7 +83,7 @@ namespace Moviedb.Controllers
         {
             if (id == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            
+
             Movie movie = _unitOfWork.MovieRepository.GetMovie(id);
             if (movie == null)
                 return HttpNotFound();
@@ -121,7 +121,6 @@ namespace Moviedb.Controllers
                 {
                     if (!movieDb.Actors.Contains(actor))
                         movieDb.Actors.Add(actor);
-                    
                 }
 
                 var actors = movieDb.Actors.ToArray();
@@ -129,7 +128,6 @@ namespace Moviedb.Controllers
                 {
                     if (!actorsToAdd.Contains(actor))
                         movieDb.Actors.Remove(actor);
-                    
                 }
 
                 movieDb.Name = movie.Name;
@@ -150,11 +148,10 @@ namespace Moviedb.Controllers
         {
             if (id == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            
+
             Movie movie = _unitOfWork.MovieRepository.GetMovie(id);
 
-            return (movie == null) ? (ActionResult) HttpNotFound() : View(movie);
-            
+            return (movie == null) ? (ActionResult)HttpNotFound() : View(movie);
         }
 
         [HttpPost]
@@ -174,7 +171,6 @@ namespace Moviedb.Controllers
             return Json(movie);
         }
 
-
         // POST: Movies/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -190,10 +186,12 @@ namespace Moviedb.Controllers
         {
             if (!String.IsNullOrEmpty(file.FileName))
             {
-                var path = "D:\\Images\\MoviePosters\\";
+                //var path = "D:\\Images\\MoviePosters\\";
+
+                var path = MovieHelper.MoviePosterFileSystemPath;
                 var myfileName = $"{DateTime.UtcNow:yyyyMMddHHmmssfff}_{file.FileName}";
                 var myFilePath = path + myfileName;
-                var filePathWebPage = "http://moviedb.kishan.com/moviePosters/" + myfileName;
+                var filePathWebPage = MovieHelper.MoviePosterWebPath + myfileName;
                 file.SaveAs(myFilePath);
                 return filePathWebPage;
             }
@@ -205,7 +203,7 @@ namespace Moviedb.Controllers
         {
             if (disposing)
                 _unitOfWork.MovieRepository.Dispose();
-            
+
             base.Dispose(disposing);
         }
     }
